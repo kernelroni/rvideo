@@ -1,0 +1,16 @@
+div#rvideo-wrapper{
+	
+	width:640px;
+	height:360px;
+	border : 1px solid black;
+	
+}
+
+video#rvideo{
+	
+	width: 500px;
+	height: 360px;
+	background:black;
+	margin:0px auto;
+	
+}
