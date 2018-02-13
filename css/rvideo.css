@@ -1,16 +1,80 @@
+/* player wrapper div */
 div#rvideo-wrapper{
 	
 	width:640px;
 	height:360px;
 	border : 1px solid black;
+	position: relative;
+	text-align: center;
 	
 }
 
-video#rvideo{
+/* video element */
+video.rvideo-player{
 	
-	width: 500px;
-	height: 360px;
+	width: 100%;
+	height: 100%;
 	background:black;
 	margin:0px auto;
 	
 }
+
+/* control bar element */
+div.rvideo-controlbar{
+	height:40px;
+	width:100%;
+	position: absolute;
+	border: 0px transparent;
+	background: rgba(0,0,0,0.5);
+	padding:0px;
+	margin: 0px;
+}
+
+
+div.rvideo-controlbar div.rcontrolbutton{
+	height : 100%;
+	width : 40px;
+	margin : 0px;
+	font-size:30px;
+	padding-top:3px;
+	color:red;
+	cursor: pointer;
+}
+
+
+div.rvideo-controlbar div.rcontrolbutton:hover{
+	color:green;
+}
+
+div.rvideo-controlbar div.rvideo-playbutton{
+
+
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

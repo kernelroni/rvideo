@@ -8,26 +8,60 @@ function rvideolog(msg){
 
 (function($) {
 
+
     $.fn.rvideo = function( options ) {
 
-        // Establish our default settings
+    	// Establish our default settings
         var settings = $.extend({
             mp4url         : 'videos/mov_bbb.mp4',
             oggurl         : 'videos/mov_bbb.ogg',
-            width    	: 320,
-			height		: 240,
+            width    	: 0,
+			height		: 0,
 			playlist	: [],
 			playlist_container_id : "rvideo-playlist",
+			default_controls : false,
+			control_bar_position : "bottom",
+			autoplay : false,
+
+			controls : {
+				play : true,
+				pause : true,
+				stop : true,
+				fullscreen : true,
+				volume : true
+			},
+
+			icon_colors : {
+				play_icon_color : "#FF0055",
+				pause_icon_color : "#FF0055",
+				stop_icon_color : "#FF0055",
+				fullscreen_icon_color : "#FF0055",
+				volume_icon_color : "#FF0055"
+
+			},
 			
 			
         }, options);
 
-        return this.each( function(i,wrapper) {            
+
+        var init = function(videoWrapper){
+
 			// the selector elements
-			rvideolog(wrapper);
-			var rplayer = jQuery(wrapper).children("video")[0];
+			rvideolog(videoWrapper);
+
+			// global rplayer
+			window.rplayer = document.createElement("video");
+			videoWrapper.appendChild(rplayer);
+			
+			// integrate settings with the video player for future use.
+			window.rplayer.settings = settings;
+			
 			
 			rvideolog(rplayer);
+
+			rplayer.setAttribute("id","rvideo-player");
+        	rplayer.setAttribute("class","rvideo-player");
+
 			
 			if (rplayer.canPlayType("video/mp4")) {
 				rplayer.setAttribute("src",settings.mp4url);
@@ -35,12 +69,84 @@ function rvideolog(msg){
 				rplayer.setAttribute("src",settings.oggurl);
 			}			
 
-			
-			rplayer.setAttribute("controls", "controls");
-			
+			// show the player default controlls - provided by the browser.
+			if(settings.default_controls){
+				rplayer.setAttribute("controls", "controls");
+			}else if(!settings.default_controls){
+				// add custom controll bar inside the video wrapper
+				addControlBar(settings,videoWrapper);
+
+			}
+
+			// autoplay settings
+			if(settings.autoplay){
+				rplayer.setAttribute("autoplay",settings.autoplay);
+			}
+
+
+        };
+
+        // add control bar function defination
+        var addControlBar = function(settings,videoWrapper){
+
+        	var controlBar = document.createElement("div");
+        	controlBar.setAttribute("id","rvideo-controlbar");
+        	controlBar.setAttribute("class","rvideo-controlbar");
+
+        	if(settings.control_bar_position == "top"){
+        		controlBar.style.top = "0px";        		
+        	}else{
+        		controlBar.style.bottom = "0px";
+        	}
+
+
+
+        	if(settings.controls.play){
+
+        	var playButton = document.createElement("div");
+        	playButton.setAttribute("id","rvideo-playbutton");
+        	playButton.setAttribute("class","rcontrolbutton rvideo-playbutton");
+        	playButton.innerHTML = "<i class='fa fa-play'></i>";
+
+        	playButton.addEventListener("click", onPlayButtonClick);
+
+        	controlBar.appendChild(playButton);
+
+        	}
+
+
+
+
+
+        	// append the control bar inside the wrapper
+        	videoWrapper.appendChild(controlBar);
+
+        }
+
+
+        var onPlayButtonClick = function(){
+
+        	rplayer.play();
+
+        }
+
+
+
+
+        return this.each( function(i,videoWrapper) {
+        	// initialize plugin only for once. block redundent calling 
+        	wrapperObject = jQuery(this);
+        	if(!wrapperObject.data("init")){
+        		// rvideolog("initializing");
+	            var instance = new init( videoWrapper );
+	            wrapperObject.data( "init", instance );        		
+        	} 
+        	// 			
+
 			
         });
+        
 
-    }
+    } // end of plugin defination
 
 }(jQuery));
