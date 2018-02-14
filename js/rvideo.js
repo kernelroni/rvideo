@@ -25,7 +25,7 @@ function rvideolog(msg){
 
 			controls : {
 				play : true,
-				pause : true,
+				//pause : true,
 				stop : true,
 				fullscreen : true,
 				volume : true
@@ -103,14 +103,24 @@ function rvideolog(msg){
 
         	if(settings.controls.play){
 
-        	var playButton = document.createElement("div");
+        	window.playButton = document.createElement("div"); // global play button
+        	window.pauseButton = document.createElement("div"); // global pause button
+
         	playButton.setAttribute("id","rvideo-playbutton");
         	playButton.setAttribute("class","rcontrolbutton rvideo-playbutton");
         	playButton.innerHTML = "<i class='fa fa-play'></i>";
 
+        	pauseButton.setAttribute("id","rvideo-pausebutton");
+        	pauseButton.setAttribute("class","rcontrolbutton rvideo-pausebutton");
+        	pauseButton.innerHTML = "<i class='fa fa-pause'></i>";
+
+
         	playButton.addEventListener("click", onPlayButtonClick);
+        	pauseButton.addEventListener("click", onPauseButtonClick);
+        	pauseButton.style.display = "none"; // hide pause button by default
 
         	controlBar.appendChild(playButton);
+        	controlBar.appendChild(pauseButton);
 
         	}
 
@@ -124,12 +134,21 @@ function rvideolog(msg){
         }
 
 
-        var onPlayButtonClick = function(){
+        var onPlayButtonClick = function(e){
 
         	rplayer.play();
+        	playButton.style.display = "none";
+        	pauseButton.style.display = "block";
 
         }
 
+        var onPauseButtonClick = function(e){
+
+        	rplayer.pause();
+        	playButton.style.display = "block";
+        	pauseButton.style.display = "none";        	
+
+        }
 
 
 
