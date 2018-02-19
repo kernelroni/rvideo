@@ -132,6 +132,7 @@ function rvideolog(msg){
         	pauseButton.style.display = "none"; // hide pause button by default
 
 
+
         	playPaushWrapper.appendChild(playButton);
         	playPaushWrapper.appendChild(pauseButton);
 
@@ -183,6 +184,8 @@ function rvideolog(msg){
         	plusButton.setAttribute("id","rvideo-plusButton");
         	plusButton.setAttribute("class","rcontrolbutton rleft rvideo-volumemutebutton");
         	plusButton.innerHTML = "<i class='fas fa-plus-square'></i>";
+
+        	volumeMute.style.display = "none"; // hide pause button by default
 
 			volumeplusminusWrapper.appendChild(minusButton); 
         	volumeplusminusWrapper.appendChild(plusButton); 
