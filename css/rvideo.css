@@ -3,7 +3,6 @@ div#rvideo-wrapper{
 	
 	width:640px;
 	height:360px;
-	border : 1px solid black;
 	position: relative;
 	text-align: center;
 	
@@ -21,24 +20,46 @@ video.rvideo-player{
 
 /* control bar element */
 div.rvideo-controlbar{
-	height:20px;
 	width:100%;
 	position: absolute;
-	border: 0px transparent;
-	background: rgba(0,0,0,0.5);
-	padding:0px;
-	margin: 0px;
+    height: 36px;
+    line-height: 36px;
+    font-size: 109%;
+    text-align: left;
+    direction: ltr;
+	background: linear-gradient(transparent, black); /* Standard syntax (must be last) */
+}
+
+
+
+
+div.rleft{
+	float:left;
+}
+
+div.rright{
+	float:right;
+}
+
+
+div.rvideo-controlbar div.rvideo-controlBarLeftPanel{
+
+	float:left;
+}
+
+div.rvideo-controlbar div.rvideo-controlBarRightPanel{
+
+	float:right;
 }
 
 
 div.rvideo-controlbar div.rcontrolbutton{
 	height : 100%;
-	width : 20px;
+	width : 46px;
 	margin : 0px;
-	font-size:18px;
-	color:red;
+	color:white;
 	cursor: pointer;
-	float: left;
+	text-align: center;
 }
 
 
@@ -46,8 +67,8 @@ div.rvideo-controlbar div.rcontrolbutton:hover{
 	color:yellow;
 }
 
-div.rvideo-controlbar div.rvideo-playbutton{
-
+div.rvideo-controlbar div.rvideo-volumebutton{
+width:30px;
 
 	
 }
