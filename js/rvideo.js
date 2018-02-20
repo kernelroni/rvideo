@@ -13,10 +13,12 @@ function rvideolog(msg){
 
     	// Establish our default settings
         var settings = $.extend({
+            id             : "rplayer_0", // default video object name. no space and any special char allowed, something like a variable name.
             mp4url         : 'videos/mov_bbb.mp4',
             oggurl         : 'videos/mov_bbb.ogg',
             width    	: 0,
 			height		: 0,
+            volume      : 1,   
 			playlist	: [],
 			playlist_container_id : "rvideo-playlist",
 			default_controls : false,
@@ -46,42 +48,65 @@ function rvideolog(msg){
 
         var init = function(videoWrapper){
 
+            videoWrapper.setAttribute("data-rplayer-id", settings.id);
+            
+            var player_id = settings.id;
+            window[player_id] = {}; // instance object : eg window['rplayer_0'] by default
+            window[player_id].settings = settings;
+            
+
+
 			// the selector elements
 			rvideolog(videoWrapper);
 
 			// global rplayer
-			window.rplayer = document.createElement("video");
-			videoWrapper.appendChild(rplayer);
+			window[player_id].player = document.createElement("video");
+			videoWrapper.appendChild(window[player_id].player);
 			
 			// integrate settings with the video player for future use.
-			window.rplayer.settings = settings;
 			
 			
-			rvideolog(rplayer);
+			
+			rvideolog(window[player_id]);
 
-			rplayer.setAttribute("id","rvideo-player");
-        	rplayer.setAttribute("class","rvideo-player");
+			window[player_id].player.setAttribute("id","rvideo-player");
+        	window[player_id].player.setAttribute("class","rvideo-player");
 
 			
-			if (rplayer.canPlayType("video/mp4")) {
-				rplayer.setAttribute("src",settings.mp4url);
+			if (window[player_id].player.canPlayType("video/mp4")) {
+				window[player_id].player.setAttribute("src",window[player_id].settings.mp4url);
 			} else {
-				rplayer.setAttribute("src",settings.oggurl);
+				window[player_id].player.setAttribute("src",window[player_id].settings.oggurl);
 			}			
 
 			// show the player default controls - provided by the browser.
-			if(settings.default_controls){
-				rplayer.setAttribute("controls", "controls");
-			}else if(!settings.default_controls){
+			if(window[player_id].settings.default_controls){
+				window[player_id].player.setAttribute("controls", "controls");
+			}else if(!window[player_id].settings.default_controls){
 				// add custom controll bar inside the video wrapper
-				addControlBar(settings,videoWrapper);
+				addControlBar(window[player_id].settings,videoWrapper);
 
 			}
 
 			// autoplay settings
-			if(settings.autoplay){
-				rplayer.setAttribute("autoplay",settings.autoplay);
+			if(window[player_id].settings.autoplay){
+				window[player_id].player.setAttribute("autoplay",settings.autoplay);
 			}
+
+            // rplayer set volume level
+            if(!isNaN(window[player_id].settings.volume)){
+
+                var volume = parseFloat(window[player_id].settings.volume);
+                if(volume >= 0.0 && volume <=  1.0 ){
+                    window[player_id].player.volume = volume;
+                }else{
+                    window[player_id].player.volume = 1;
+                }
+
+            }else{
+                window[player_id].player.volume = 1;
+            }
+            // volume setup end
 
 
         };
@@ -89,9 +114,11 @@ function rvideolog(msg){
         // add control bar function defination
         var addControlBar = function(settings,videoWrapper){
 
-        	var controlBar = document.createElement("div");
-        	controlBar.setAttribute("id","rvideo-controlbar");
-        	controlBar.setAttribute("class","rvideo-controlbar");
+            var player_id = settings.id;
+
+        	window[player_id].controlBar = document.createElement("div");
+        	window[player_id].controlBar.setAttribute("id","rvideo-controlbar");
+        	window[player_id].controlBar.setAttribute("class","rvideo-controlbar");
 
         	var controlBarLeftPanel = document.createElement("div");
         	controlBarLeftPanel.setAttribute("id","rvideo-controlBarLeftPanel");
@@ -102,104 +129,113 @@ function rvideolog(msg){
         	controlBarRightPanel.setAttribute("class","rvideo-controlBarRightPanel");
 
 
-        	if(settings.control_bar_position == "top"){
-        		controlBar.style.top = "0px";        		
+            window[player_id].controlBar.leftPanel = controlBarLeftPanel;
+            window[player_id].controlBar.rightPanel = controlBarRightPanel;
+
+
+        	if(window[player_id].settings.control_bar_position == "top"){
+        		window[player_id].controlBar.style.top = "0px";        		
         	}else{
-        		controlBar.style.bottom = "0px";
+        		window[player_id].controlBar.style.bottom = "0px";
         	}
 
 
+
+            window[player_id].controlBar.btn = {}; // all control bar button collection 
+
         	// add play pause buttons
-        	if(settings.controls.play){
+        	if(window[player_id].settings.controls.play){            
 
-        	window.playPaushWrapper = document.createElement("div"); // play pause button wrapper
-			playPaushWrapper.setAttribute("id","rvideo-playPaushWrapper");
-        	playPaushWrapper.setAttribute("class","rleft rvideo-playPaushWrapper");        	
-
-        	window.playButton = document.createElement("div"); // global play button
-        	window.pauseButton = document.createElement("div"); // global pause button
-
-        	playButton.setAttribute("id","rvideo-playbutton");
-        	playButton.setAttribute("class","rcontrolbutton rvideo-playbutton");
-        	playButton.innerHTML = "<i class='fas fa-play'></i>";
-
-        	pauseButton.setAttribute("id","rvideo-pausebutton");
-        	pauseButton.setAttribute("class","rcontrolbutton rvideo-pausebutton");
-        	pauseButton.innerHTML = "<i class='fas fa-pause'></i>";
+        	window[player_id].controlBar.playPauseWrapper = document.createElement("div"); // play pause button wrapper
+			window[player_id].controlBar.playPauseWrapper.setAttribute("id","rvideo-playPaushWrapper");
+        	window[player_id].controlBar.playPauseWrapper.setAttribute("class","rleft rvideo-playPaushWrapper");  
 
 
 
-        	pauseButton.style.display = "none"; // hide pause button by default
+        	window[player_id].controlBar.btn.playButton = document.createElement("div"); // global play button
+        	window[player_id].controlBar.btn.pauseButton = document.createElement("div"); // global pause button
+
+        	window[player_id].controlBar.btn.playButton.setAttribute("id","rvideo-playbutton");
+        	window[player_id].controlBar.btn.playButton.setAttribute("class","rcontrolbutton rvideo-playbutton");
+        	window[player_id].controlBar.btn.playButton.innerHTML = "<i class='fas fa-play'></i>";
+
+        	window[player_id].controlBar.btn.pauseButton.setAttribute("id","rvideo-pausebutton");
+        	window[player_id].controlBar.btn.pauseButton.setAttribute("class","rcontrolbutton rvideo-pausebutton");
+        	window[player_id].controlBar.btn.pauseButton.innerHTML = "<i class='fas fa-pause'></i>";
 
 
 
-        	playPaushWrapper.appendChild(playButton);
-        	playPaushWrapper.appendChild(pauseButton);
+        	window[player_id].controlBar.btn.pauseButton.style.display = "none"; // hide pause button by default
 
-			controlBarLeftPanel.appendChild(playPaushWrapper);
+
+
+        	window[player_id].controlBar.playPauseWrapper.appendChild ( window[player_id].controlBar.btn.playButton );
+        	window[player_id].controlBar.playPauseWrapper.appendChild ( window[player_id].controlBar.btn.pauseButton );
+
+			controlBarLeftPanel.appendChild ( window[player_id].controlBar.playPauseWrapper );
         	
 
         	} // // play pause buttons  end
 
 
         	// add volume buttons
-        	if(settings.controls.volume){
+        	if(window[player_id].settings.controls.volume){
 
 
-        	window.rvideoVolumeWrapper = document.createElement("div");
-			rvideoVolumeWrapper.setAttribute("id","rvideo-rvideoVolumeWrapper");
-        	rvideoVolumeWrapper.setAttribute("class","rleft rvideo-rvideoVolumeWrapper");
+        	window[player_id].controlBar.volumeWrapper = document.createElement("div");
+			window[player_id].controlBar.volumeWrapper.setAttribute("id","rvideo-volumeWrapper");
+        	window[player_id].controlBar.volumeWrapper.setAttribute("class","rleft rvideo-volumeWrapper");
 
-        	window.volumeplusminusWrapper = document.createElement("div"); // play pause button wrapper
-			volumeplusminusWrapper.setAttribute("id","rvideo-volumeplusminusWrapper");
-        	volumeplusminusWrapper.setAttribute("class","rleft rvideo-volumeplusminusWrapper");     
-
-
-        	window.volumeWrapper = document.createElement("div");
-			volumeWrapper.setAttribute("id","rvideo-volumewrapper");
-        	volumeWrapper.setAttribute("class","rleft rvideo-volumewrapper");   
+        	window[player_id].controlBar.plusMinusWrapper = document.createElement("div"); // play pause button wrapper
+			window[player_id].controlBar.plusMinusWrapper.setAttribute("id","rvideo-plusMinusWrapper");
+        	window[player_id].controlBar.plusMinusWrapper.setAttribute("class","rleft rvideo-plusMinusWrapper");     
 
 
+        	window[player_id].controlBar.soundWrapper = document.createElement("div");
+			window[player_id].controlBar.soundWrapper.setAttribute("id","rvideo-soundWrapper");
+        	window[player_id].controlBar.soundWrapper.setAttribute("class","rleft rvideo-soundWrapper");   
 
 
 
-        	window.volumeButton = document.createElement("div");
-        	window.volumeMute = document.createElement("div") ;
-        	window.plusButton = document.createElement("div"); 
-        	window.minusButton = document.createElement("div"); 
 
 
-        	volumeButton.setAttribute("id","rvideo-volumeButton");
-        	volumeButton.setAttribute("class","rcontrolbutton rleft rvideo-volumebutton");
-        	volumeButton.innerHTML = "<i class='fas fa-volume-up'></i>";
+        	window[player_id].controlBar.btn.volumeUpButton = document.createElement("div");
+        	window[player_id].controlBar.btn.muteButton = document.createElement("div") ;        	
+        	window[player_id].controlBar.btn.minusButton = document.createElement("div");
+            window[player_id].controlBar.btn.plusButton = document.createElement("div");  
 
-        	volumeMute.setAttribute("id","rvideo-volumeMute");
-        	volumeMute.setAttribute("class","rcontrolbutton rleft rvideo-volumemutebutton");
-        	volumeMute.innerHTML = "<i class='fas fa-volume-off'></i>";
 
-        	minusButton.setAttribute("id","rvideo-minusButton");
-        	minusButton.setAttribute("class","rcontrolbutton rleft rvideo-volumebutton");
-        	minusButton.innerHTML = "<i class='fas fa-minus-square'></i>";
+        	window[player_id].controlBar.btn.volumeUpButton.setAttribute("id","rvideo-volumeUpButton");
+        	window[player_id].controlBar.btn.volumeUpButton.setAttribute("class","rcontrolbutton rleft rvideo-volumeUpButton");
+        	window[player_id].controlBar.btn.volumeUpButton.innerHTML = "<i class='fas fa-volume-up'></i>";
 
-        	plusButton.setAttribute("id","rvideo-plusButton");
-        	plusButton.setAttribute("class","rcontrolbutton rleft rvideo-volumemutebutton");
-        	plusButton.innerHTML = "<i class='fas fa-plus-square'></i>";
+        	window[player_id].controlBar.btn.muteButton.setAttribute("id","rvideo-muteButton");
+        	window[player_id].controlBar.btn.muteButton.setAttribute("class","rcontrolbutton rleft rvideo-muteButton");
+        	window[player_id].controlBar.btn.muteButton.innerHTML = "<i class='fas fa-volume-off'></i>";
 
-        	volumeMute.style.display = "none"; // hide pause button by default
+        	window[player_id].controlBar.btn.minusButton.setAttribute("id","rvideo-minusButton");
+        	window[player_id].controlBar.btn.minusButton.setAttribute("class","rcontrolbutton rleft rvideo-minusButton");
+        	window[player_id].controlBar.btn.minusButton.innerHTML = "<i class='fas fa-minus-square'></i>";
 
-			volumeplusminusWrapper.appendChild(minusButton); 
-        	volumeplusminusWrapper.appendChild(plusButton); 
+        	window[player_id].controlBar.btn.plusButton.setAttribute("id","rvideo-plusButton");
+        	window[player_id].controlBar.btn.plusButton.setAttribute("class","rcontrolbutton rleft rvideo-plusButton");
+        	window[player_id].controlBar.btn.plusButton.innerHTML = "<i class='fas fa-plus-square'></i>";
+
+        	window[player_id].controlBar.btn.muteButton.style.display = "none"; // hide pause button by default
+
+			window[player_id].controlBar.plusMinusWrapper.appendChild( window[player_id].controlBar.btn.minusButton ); 
+        	window[player_id].controlBar.plusMinusWrapper.appendChild( window[player_id].controlBar.btn.plusButton ); 
         	
 
 
-        	volumeWrapper.appendChild(volumeButton); 
-        	volumeWrapper.appendChild(volumeMute);         	       	
+        	window[player_id].controlBar.soundWrapper.appendChild ( window[player_id].controlBar.btn.volumeUpButton ); 
+        	window[player_id].controlBar.soundWrapper.appendChild ( window[player_id].controlBar.btn.muteButton );         	       	
 
-        	rvideoVolumeWrapper.appendChild(volumeWrapper);
-        	rvideoVolumeWrapper.appendChild(volumeplusminusWrapper);
+        	window[player_id].controlBar.volumeWrapper.appendChild( window[player_id].controlBar.soundWrapper );
+        	window[player_id].controlBar.volumeWrapper.appendChild( window[player_id].controlBar.plusMinusWrapper );
 
 
-        	controlBarLeftPanel.appendChild(rvideoVolumeWrapper);
+        	window[player_id].controlBar.leftPanel.appendChild( window[player_id].controlBar.volumeWrapper );
 
 
         	}        	
@@ -215,21 +251,21 @@ function rvideolog(msg){
         	fullscreenButton.innerHTML = "<i class='fas fa-expand-arrows-alt'></i>"; 
 
 
-			controlBarRightPanel.appendChild(fullscreenButton);
+			//controlBarRightPanel.appendChild(fullscreenButton);
 
         	}
 
 
         	// add left control panel
-        	controlBar.appendChild(controlBarLeftPanel);
+        	window[player_id].controlBar.appendChild(window[player_id].controlBar.leftPanel);
 
         	// add right control panel 
-			controlBar.appendChild(controlBarRightPanel);
+			window[player_id].controlBar.appendChild( window[player_id].controlBar.rightPanel );
 
 
 
         	// append the control bar inside the main wrapper
-        	videoWrapper.appendChild(controlBar);
+        	videoWrapper.appendChild( window[player_id].controlBar );
 
 
 
@@ -243,8 +279,10 @@ function rvideolog(msg){
         // all the event listener is applied from this function.
         function applyAllEventListener(){
 
-        	playButton.addEventListener("click", onPlayButtonClick);
-        	pauseButton.addEventListener("click", onPauseButtonClick);
+            var player_id = settings.id;
+
+        	window[player_id].controlBar.btn.playButton.addEventListener("click", onPlayButtonClick);
+        	//window[player_id].controlBar.btn.pauseButton.addEventListener("click", onPauseButtonClick);
 
 
         }
@@ -253,9 +291,10 @@ function rvideolog(msg){
 
         var onPlayButtonClick = function(e){
 
-        	rplayer.play();
-        	playButton.style.display = "none";
-        	pauseButton.style.display = "block";
+            var player_id = settings.id; 
+        	window[player_id].player.play();
+        	window[player_id].controlBar.btn.playButton.style.display = "none";
+        	window[player_id].controlBar.btn.pauseButton.style.display = "block";
 
         }
 
@@ -274,7 +313,7 @@ function rvideolog(msg){
         	wrapperObject = jQuery(this);
         	if(!wrapperObject.data("init")){
         		// rvideolog("initializing");
-	            var instance = new init( videoWrapper );
+	            var instance = new init( videoWrapper ); // invoke the first funtion 
 	            wrapperObject.data( "init", instance );        		
         	} 
         	// 			
