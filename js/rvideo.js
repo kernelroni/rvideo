@@ -24,6 +24,11 @@ function rvideolog(msg){
 			default_controls : false,
 			control_bar_position : "bottom",
 			autoplay : false,
+			logo : {
+				url : "icons/logo/rvideologo.png",
+				left : 10,
+				top : 10
+			},
 
 			controls : {
 				play : true,
@@ -54,7 +59,7 @@ function rvideolog(msg){
             window[player_id] = {}; // instance object : eg window['rplayer_0'] by default
             window[player_id].settings = settings;
             
-
+            
 
 			// the selector elements
 			rvideolog(videoWrapper);
@@ -108,8 +113,29 @@ function rvideolog(msg){
             }
             // volume setup end
 
-
+			// autoplay settings
+			if(window[player_id].settings.logo){
+				var logo = window[player_id].settings.logo;
+				addLogo(logo,videoWrapper);
+			}
+			
+			
         };
+		
+		
+		// add logo function defination
+		var addLogo = function(logo,videoWrapper){
+			var logoImg = new Image();
+            logoImg.src = logo.url;
+            logoImg.id = "rvideo-logo";
+            logoImg.className = "rvideo-logo";
+            logoImg.style.position = "absolute";
+            logoImg.style.left = logo.left + "px";
+            logoImg.style.top = logo.top + "px";
+
+            videoWrapper.appendChild(logoImg);
+			
+		}
 
         // add control bar function defination
         var addControlBar = function(settings,videoWrapper){
