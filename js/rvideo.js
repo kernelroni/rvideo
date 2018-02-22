@@ -74,8 +74,12 @@ function rvideolog(msg){
 			
 			rvideolog(window[player_id]);
 
-			window[player_id].player.setAttribute("id","rvideo-player");
-        	window[player_id].player.setAttribute("class","rvideo-player");
+			window[player_id].player.setAttribute("id","video_"+player_id);
+        	window[player_id].player.setAttribute("class","video_"+player_id);
+
+            window[player_id].player.style.width = "100%";
+            window[player_id].player.style.height = "100%";            
+
 
 			
 			if (window[player_id].player.canPlayType("video/mp4")) {
@@ -142,9 +146,30 @@ function rvideolog(msg){
 
             var player_id = settings.id;
 
-        	window[player_id].controlBar = document.createElement("div");
-        	window[player_id].controlBar.setAttribute("id","rvideo-controlbar");
-        	window[player_id].controlBar.setAttribute("class","rvideo-controlbar");
+            // progress Bar
+        	window[player_id].progressBar = document.createElement("div");
+            window[player_id].progressBar.setAttribute("id","progressBar"+player_id);
+            window[player_id].progressBar.setAttribute("class","rvideo-progressBar progressBar"+player_id);
+            window[player_id].progressBar.style.position = "relative";
+            window[player_id].progressBar.style.width = "100%";
+            window[player_id].progressBar.style.height = "3px";
+
+
+
+            window[player_id].progressBarProgress = document.createElement("div");
+            window[player_id].progressBarProgress.setAttribute("id","progressBarProgress"+player_id);
+            window[player_id].progressBarProgress.setAttribute("class","rvideo-progressBarProgress progressBarProgress"+player_id);
+            window[player_id].progressBarProgress.style.position = "absolute";
+            window[player_id].progressBarProgress.style.width = "20px";
+            window[player_id].progressBarProgress.style.height = "3px";
+
+            // append progress bar progress 
+            window[player_id].progressBar.appendChild( window[player_id].progressBarProgress );
+
+
+            window[player_id].controlBar = document.createElement("div");
+        	window[player_id].controlBar.setAttribute("id","controlBar_"+player_id);
+        	window[player_id].controlBar.setAttribute("class","rvideo-controlbar controlBar_"+player_id);
 
         	var controlBarLeftPanel = document.createElement("div");
         	controlBarLeftPanel.setAttribute("id","rvideo-controlBarLeftPanel");
@@ -282,6 +307,10 @@ function rvideolog(msg){
         	}
 
 
+            // add progress progressBar
+            window[player_id].controlBar.appendChild( window[player_id].progressBar );
+
+
         	// add left control panel
         	window[player_id].controlBar.appendChild(window[player_id].controlBar.leftPanel);
 
@@ -308,7 +337,7 @@ function rvideolog(msg){
             var player_id = settings.id;
 
         	window[player_id].controlBar.btn.playButton.addEventListener("click", onPlayButtonClick);
-        	//window[player_id].controlBar.btn.pauseButton.addEventListener("click", onPauseButtonClick);
+        	window[player_id].controlBar.btn.pauseButton.addEventListener("click", onPauseButtonClick);
 
 
         }
@@ -326,9 +355,11 @@ function rvideolog(msg){
 
         var onPauseButtonClick = function(e){
 
-        	rplayer.pause();
-        	playButton.style.display = "block";
-        	pauseButton.style.display = "none";        	
+            var player_id = settings.id; 
+
+        	window[player_id].player.pause();
+        	window[player_id].controlBar.btn.playButton.style.display = "block";
+        	window[player_id].controlBar.btn.pauseButton.style.display = "none";        	
 
         }
 

@@ -1,22 +1,25 @@
+body{
+	padding: 0px;
+	margin: 0px;
+}
+
 /* player wrapper div */
 div#rvideo-wrapper{
 	
 	width:640px;
-	height:360px;
 	position: relative;
 	text-align: center;
 	
 }
 
-/* video element */
-video.rvideo-player{
+div#rvideo-wrapper2{
 	
-	width: 100%;
-	height: 100%;
-	background:black;
-	margin:0px auto;
+	width:640px;
+	position: relative;
+	text-align: center;
 	
 }
+
 
 /* control bar element */
 div.rvideo-controlbar{
@@ -40,6 +43,17 @@ div.rleft{
 div.rright{
 	float:right;
 }
+
+
+div.rvideo-controlbar div.rvideo-progressBar{
+	/*background: #fc0;*/
+	background: #EEEEEE;
+}
+
+div.rvideo-controlbar div.rvideo-progressBarProgress{
+	background: red;
+}
+
 
 
 div.rvideo-controlbar div.rvideo-controlBarLeftPanel{
