@@ -51,6 +51,9 @@ function rvideolog(msg){
         }, options);
 
 
+
+
+
         var init = function(videoWrapper){
 
             videoWrapper.setAttribute("data-rplayer-id", settings.id);
@@ -153,6 +156,7 @@ function rvideolog(msg){
             window[player_id].progressBar.style.position = "relative";
             window[player_id].progressBar.style.width = "100%";
             window[player_id].progressBar.style.height = "3px";
+            window[player_id].progressBar.style.backgroundColor  = "rgba(200,200,200,0.5)";
 
 
 
@@ -160,8 +164,14 @@ function rvideolog(msg){
             window[player_id].progressBarProgress.setAttribute("id","progressBarProgress"+player_id);
             window[player_id].progressBarProgress.setAttribute("class","rvideo-progressBarProgress progressBarProgress"+player_id);
             window[player_id].progressBarProgress.style.position = "absolute";
-            window[player_id].progressBarProgress.style.width = "20px";
+            window[player_id].progressBarProgress.style.width = "0px";
             window[player_id].progressBarProgress.style.height = "3px";
+
+            window[player_id].progressBarProgress.style.backgroundColor  = "rgba(255,0,0,0.8)";
+
+
+
+
 
             // append progress bar progress 
             window[player_id].progressBar.appendChild( window[player_id].progressBarProgress );
@@ -339,11 +349,57 @@ function rvideolog(msg){
         	window[player_id].controlBar.btn.playButton.addEventListener("click", onPlayButtonClick);
         	window[player_id].controlBar.btn.pauseButton.addEventListener("click", onPauseButtonClick);
 
+            // player event
+            window[player_id].player.addEventListener("timeupdate", updateProgressBarProgress );
+
+            window[player_id].progressBar.addEventListener("click", onProgressBarProgressClick,true);
+
+
 
         }
 
+        // on progress bar click, update video current time and progress bar width.
+        var onProgressBarProgressClick = function(e){
+
+            var player_id = settings.id;             
+            var clickX = parseFloat(e.clientX);
+            var totalWidth = parseFloat(e.target.offsetWidth);
+
+            var currentTime = parseFloat(window[player_id].player.currentTime);
+            var totalDuration  = parseFloat(window[player_id].player.duration);
+
+            var timePosition = ( clickX / totalWidth  )  * totalDuration
+            
+            window[player_id].player.currentTime = timePosition;
+
+            //alert(e.clientX + " " + e.target.offsetWidth);
+
+            // update the progress bar
+            updateProgressBarProgress();
+
+        }
+
+        // update the progress bar
+        var updateProgressBarProgress = function(e){
+
+            var player_id = settings.id; 
+            var currentTime = parseFloat(window[player_id].player.currentTime);
+            var totalDuration  = parseFloat(window[player_id].player.duration);
+            var progressMaxWdith = 100; // %
+
+            var currentWidth = (currentTime / totalDuration) * progressMaxWdith;
+            currentWidth = currentWidth + "%"
+
+            //console.log(currentWidth);
+
+            // updating the progress bar
+            window[player_id].progressBarProgress.style.width  = currentWidth;
 
 
+
+        }
+
+        // on play button click
         var onPlayButtonClick = function(e){
 
             var player_id = settings.id; 
@@ -353,6 +409,7 @@ function rvideolog(msg){
 
         }
 
+        // on pause button click
         var onPauseButtonClick = function(e){
 
             var player_id = settings.id; 
@@ -364,7 +421,7 @@ function rvideolog(msg){
         }
 
 
-
+        // apply the plugin
         return this.each( function(i,videoWrapper) {
         	// initialize plugin only for once. block redundent calling 
         	wrapperObject = jQuery(this);
