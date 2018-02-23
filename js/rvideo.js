@@ -29,6 +29,7 @@ function rvideolog(msg){
 				left : 10,
 				top : 10
 			},
+            poster : "icons/logo/rvideoposter.png",
 
 			controls : {
 				play : true,
@@ -125,6 +126,11 @@ function rvideolog(msg){
 				var logo = window[player_id].settings.logo;
 				addLogo(logo,videoWrapper);
 			}
+
+            if(window[player_id].settings.poster){
+                window[player_id].player.setAttribute("poster",window[player_id].settings.poster);
+            }
+
 			
 			
         };
