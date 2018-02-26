@@ -26,7 +26,7 @@ div.rvideo-controlbar{
 	width:100%;
 	position: absolute;
     height: 36px;
-    line-height: 36px;
+    line-height: 32px;
     font-size: 109%;
     text-align: left;
     direction: ltr;

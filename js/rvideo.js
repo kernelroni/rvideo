@@ -155,6 +155,8 @@ function rvideolog(msg){
 
             var player_id = settings.id;
 
+            window[player_id].videoWrapper = videoWrapper;
+
             // progress Bar
         	window[player_id].progressBar = document.createElement("div");
             window[player_id].progressBar.setAttribute("id","progressBar"+player_id);
@@ -312,13 +314,13 @@ function rvideolog(msg){
 			// add fullscreen button
         	if(settings.controls.fullscreen){
 
-        	window.fullscreenButton = document.createElement("div");
-			fullscreenButton.setAttribute("id","rvideo-fullscreenButton");
-        	fullscreenButton.setAttribute("class","rcontrolbutton rright rvideo-fullscreenButton");
-        	fullscreenButton.innerHTML = "<i class='fas fa-expand-arrows-alt'></i>"; 
+        	window[player_id].controlBar.btn.fullscreenButton = document.createElement("div");
+			window[player_id].controlBar.btn.fullscreenButton.setAttribute("id","rvideo-fullscreenButton");
+        	window[player_id].controlBar.btn.fullscreenButton.setAttribute("class","rcontrolbutton rright rvideo-fullscreenButton");
+        	window[player_id].controlBar.btn.fullscreenButton.innerHTML = "<i class='fas fa-expand-arrows-alt'></i>"; 
 
 
-			//controlBarRightPanel.appendChild(fullscreenButton);
+			window[player_id].controlBar.rightPanel.appendChild(window[player_id].controlBar.btn.fullscreenButton);
 
         	}
 
@@ -354,6 +356,7 @@ function rvideolog(msg){
 
         	window[player_id].controlBar.btn.playButton.addEventListener("click", onPlayButtonClick);
         	window[player_id].controlBar.btn.pauseButton.addEventListener("click", onPauseButtonClick);
+            window[player_id].controlBar.btn.fullscreenButton.addEventListener("click", doVideoFullScreen);
 
             // player event
             window[player_id].player.addEventListener("timeupdate", updateProgressBarProgress );
@@ -363,6 +366,27 @@ function rvideolog(msg){
 
 
         }
+
+        var doVideoFullScreen = function(){
+            var player_id = settings.id; 
+                
+                <!--console.log ('it is working'); -->
+                if(window[player_id].videoWrapper.requestFullscreen){
+                    window[player_id].videoWrapper.requestFullscreen();
+                } 
+                else if (window[player_id].videoWrapper.webkitRequestFullscreen){
+                    window[player_id].videoWrapper.webkitRequestFullscreen();
+                }
+                else if (window[player_id].videoWrapper.mozRequestFullScreen){
+                    window[player_id].videoWrapper.mozRequestFullScreen();
+                }
+                else if (window[player_id].videoWrapper.msRequestFullscreen){
+                    window[player_id].videoWrapper.msRequestFullscreen();
+                }   
+        }
+
+
+
 
         // on progress bar click, update video current time and progress bar width.
         var onProgressBarProgressClick = function(e){
@@ -429,6 +453,8 @@ function rvideolog(msg){
 
         // apply the plugin
         return this.each( function(i,videoWrapper) {
+
+            rvideolog(videoWrapper);
         	// initialize plugin only for once. block redundent calling 
         	wrapperObject = jQuery(this);
         	if(!wrapperObject.data("init")){
