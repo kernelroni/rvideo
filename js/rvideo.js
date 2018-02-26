@@ -29,6 +29,7 @@ function rvideolog(msg){
 				left : 10,
 				top : 10
 			},
+            control_bar_logo : "<a href='http://kernelroni.com' target='_blank'><img src='icons/logo/rvideologo.png' /></a>",
             poster : "icons/logo/rvideoposter.png",
 
 			controls : {
@@ -67,6 +68,8 @@ function rvideolog(msg){
 
 			// the selector elements
 			rvideolog(videoWrapper);
+
+
 
 			// global rplayer
 			window[player_id].player = document.createElement("video");
@@ -292,13 +295,47 @@ function rvideolog(msg){
 
         	window[player_id].controlBar.btn.muteButton.style.display = "none"; // hide pause button by default
 
-			window[player_id].controlBar.plusMinusWrapper.appendChild( window[player_id].controlBar.btn.minusButton ); 
-        	window[player_id].controlBar.plusMinusWrapper.appendChild( window[player_id].controlBar.btn.plusButton ); 
+
+
+            // volume control unit
+            var volumeUnit = document.createElement("div");
+                volumeUnit.setAttribute("class","volume-unit");
+
+
+            window[player_id].controlBar.btn.volumeUnits = [];
+            for(var i=1; i<=10; ++i){
+
+                var volumeElmClone = volumeUnit.cloneNode(true);
+                    volumeElmClone.setAttribute("data-index",i);
+                    volumeElmClone.innerHTML = "&mid;";
+                window[player_id].controlBar.btn.volumeUnits.push(volumeElmClone);
+            }
+
+            console.log(window[player_id].controlBar.btn.volumeUnits);
+
+
+
+
+
+
+
+
+
+
+
+			//window[player_id].controlBar.plusMinusWrapper.appendChild( window[player_id].controlBar.btn.minusButton ); 
+        	//window[player_id].controlBar.plusMinusWrapper.appendChild( window[player_id].controlBar.btn.plusButton ); 
+
+            for(var i=0; i<=window[player_id].controlBar.btn.volumeUnits.length - 1; ++i){
+                window[player_id].controlBar.plusMinusWrapper.appendChild(window[player_id].controlBar.btn.volumeUnits[i]);
+            }
         	
 
 
         	window[player_id].controlBar.soundWrapper.appendChild ( window[player_id].controlBar.btn.volumeUpButton ); 
         	window[player_id].controlBar.soundWrapper.appendChild ( window[player_id].controlBar.btn.muteButton );         	       	
+
+
 
         	window[player_id].controlBar.volumeWrapper.appendChild( window[player_id].controlBar.soundWrapper );
         	window[player_id].controlBar.volumeWrapper.appendChild( window[player_id].controlBar.plusMinusWrapper );
@@ -309,6 +346,11 @@ function rvideolog(msg){
 
         	}        	
 
+            
+
+
+
+
 
 
 			// add fullscreen button
@@ -317,12 +359,33 @@ function rvideolog(msg){
         	window[player_id].controlBar.btn.fullscreenButton = document.createElement("div");
 			window[player_id].controlBar.btn.fullscreenButton.setAttribute("id","rvideo-fullscreenButton");
         	window[player_id].controlBar.btn.fullscreenButton.setAttribute("class","rcontrolbutton rright rvideo-fullscreenButton");
-        	window[player_id].controlBar.btn.fullscreenButton.innerHTML = "<i class='fas fa-expand-arrows-alt'></i>"; 
+        	window[player_id].controlBar.btn.fullscreenButton.innerHTML = "<i class='fas fa-expand'></i>"; 
+
+
+            window[player_id].controlBar.btn.closeFullscreenButton = document.createElement("div");
+            window[player_id].controlBar.btn.closeFullscreenButton.setAttribute("id","rvideo-closeFullscreenButton");
+            window[player_id].controlBar.btn.closeFullscreenButton.setAttribute("class","rcontrolbutton rright rvideo-closeFullscreenButton");
+            window[player_id].controlBar.btn.closeFullscreenButton.innerHTML = "<i class='fas fa-compress'></i>"; 
+            window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";
+
 
 
 			window[player_id].controlBar.rightPanel.appendChild(window[player_id].controlBar.btn.fullscreenButton);
+            window[player_id].controlBar.rightPanel.appendChild(window[player_id].controlBar.btn.closeFullscreenButton);
 
         	}
+
+
+            if(settings.control_bar_logo){
+
+                window[player_id].controlBar.btn.control_bar_logo = document.createElement("div");
+                window[player_id].controlBar.btn.control_bar_logo.innerHTML = settings.control_bar_logo;
+                window[player_id].controlBar.btn.control_bar_logo.setAttribute("class","rvideo-control_bar_logo rright");
+                window[player_id].controlBar.rightPanel.appendChild(window[player_id].controlBar.btn.control_bar_logo);
+
+
+            }
+
 
 
             // add progress progressBar
@@ -356,18 +419,40 @@ function rvideolog(msg){
 
         	window[player_id].controlBar.btn.playButton.addEventListener("click", onPlayButtonClick);
         	window[player_id].controlBar.btn.pauseButton.addEventListener("click", onPauseButtonClick);
-            window[player_id].controlBar.btn.fullscreenButton.addEventListener("click", doVideoFullScreen);
+            window[player_id].controlBar.btn.fullscreenButton.addEventListener("click", onFullScreenButtonClick);
+            window[player_id].controlBar.btn.closeFullscreenButton.addEventListener("click", onCloseFullscreenButtonClick);
+
+
+            // volume unit event listener
+            for(var i=0; i<=window[player_id].controlBar.btn.volumeUnits.length - 1; ++i){
+                window[player_id].controlBar.btn.volumeUnits[i].addEventListener("click",onVolumeUnitClick);
+            }            
+
 
             // player event
             window[player_id].player.addEventListener("timeupdate", updateProgressBarProgress );
 
             window[player_id].progressBar.addEventListener("click", onProgressBarProgressClick,true);
 
+            // default hide the close full screen button
+            window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";
+
 
 
         }
 
-        var doVideoFullScreen = function(){
+        var onVolumeUnitClick = function(e){
+
+
+
+
+
+
+        }
+
+
+        // on full screen button click
+        var onFullScreenButtonClick = function(){
             var player_id = settings.id; 
                 
                 <!--console.log ('it is working'); -->
@@ -383,7 +468,43 @@ function rvideolog(msg){
                 else if (window[player_id].videoWrapper.msRequestFullscreen){
                     window[player_id].videoWrapper.msRequestFullscreen();
                 }   
+
+            window[player_id].controlBar.btn.fullscreenButton.style.display = "none";
+            window[player_id].controlBar.btn.closeFullscreenButton.style.display = "inline-block";
         }
+
+
+        // on close full screen button click
+        var onCloseFullscreenButtonClick = function(){
+            var player_id = settings.id; 
+                
+            var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+            (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+            (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+            (document.msFullscreenElement && document.msFullscreenElement !== null);
+
+            var docElm = document.documentElement;
+
+
+            if(isInFullScreen){
+
+                    if (document.exitFullscreen) {
+                      document.exitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                      document.msExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                      document.mozCancelFullScreen();
+                    } else if (document.webkitExitFullscreen) {
+                      document.webkitExitFullscreen();
+                    }
+
+             window[player_id].controlBar.btn.fullscreenButton.style.display = "inline-block";
+             window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";                    
+
+            }
+
+        }
+
 
 
 

@@ -88,11 +88,19 @@ width:30px;
 }
 
 
+div.rvideo-controlbar div.volume-unit{
+	color:white;
+	display: inline-block;
+	cursor: pointer;
+}
 
+div.rvideo-controlbar div.volume-unit:hover{
+	color:red;
+}
 
-
-
-
+div.rvideo-controlbar div.volume-unit.active{
+	color:red;
+}
 
 
 
