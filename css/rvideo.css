@@ -12,6 +12,12 @@ div#rvideo-wrapper{
 	
 }
 
+div#rvideo-wrapper:fullscreen{
+	width:100%;
+	height: 100%;
+}
+
+
 div#rvideo-wrapper2{
 	
 	width:640px;
@@ -109,6 +115,7 @@ width: 100px;
 height: 4px;
 background: #EEEEEE;
 position: relative;
+margin-top:15px;
 }
 
 

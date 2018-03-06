@@ -8,46 +8,26 @@ var volumeProgress = document.createElement("div");
 var volumeNiddle = document.createElement("div");
 	volumeNiddle.setAttribute("class","rvideo-bolume-niddle");
 
-function getOffset(el) {
-  el = el.getBoundingClientRect();
-  return {
-    left: el.left + window.scrollX,
-    top: el.top + window.scrollY
-  }
-}
+
 
 function onVolumeNiddleMove(e){
 
-var pxdiff = 0;
+	var pxdiff = 0;
 
-/*
-if(e.clientX > this.currentPositionLeft){
-	pxdiff = e.clientX - volumeNiddle.currentPositionLeft;
-}else{
-	pxdiff = volumeNiddle.currentPositionLeft - e.clientX ;
-}
-*/
-
-var xlimit = getOffset(volumeControll).left;
-var xlimitend = xlimit +  volumeControll.offsetWidth;
-var currentPos = e.clientX - volumeControll.offsetLeft;
+	var xlimit = volumeControll.offsetLeft;
+	var xlimitend = xlimit +  volumeControll.offsetWidth;
+	var currentPos = e.clientX;// - volumeControll.offsetLeft;
 
 
-if(currentPos <= xlimit){
-	currentPos = xlimit;
-}else if(currentPos >= xlimitend){
-	currentPos = xlimitend;
-}
+	if(currentPos <= xlimit){
+		currentPos = xlimit;
+	}else if(currentPos >= xlimitend){
+		currentPos = xlimitend;
+	}
 
+	currentPos = currentPos - volumeControll.offsetLeft;
 
-console.log(xlimit + " " + xlimitend + " " + currentPos);
-
-
-
-
-
-
-volumeNiddle.style.left = currentPos + "px";
+	volumeNiddle.style.left = currentPos + "px";
 //console.log(e);
 
 }

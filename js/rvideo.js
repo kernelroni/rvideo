@@ -297,39 +297,30 @@ function rvideolog(msg){
 
 
 
-            // volume control unit
-            var volumeUnit = document.createElement("div");
-                volumeUnit.setAttribute("class","volume-unit");
+            // volume progress 
 
+        var volumeControl = document.createElement("div");
+            volumeControl.setAttribute("class","rvideo-volume-control");
+            volumeControl.setAttribute("id","rvideo-volume-control");
 
-            window[player_id].controlBar.btn.volumeUnits = [];
-            for(var i=1; i<=10; ++i){
+        var volumeProgress = document.createElement("div");
+            volumeProgress.setAttribute("class","rvideo-volume-progress");
 
-                var volumeElmClone = volumeUnit.cloneNode(true);
-                    volumeElmClone.setAttribute("data-index",i);
-                    volumeElmClone.innerHTML = "&mid;";
-                window[player_id].controlBar.btn.volumeUnits.push(volumeElmClone);
-            }
+        var volumeNiddle = document.createElement("div");
+            volumeNiddle.setAttribute("class","rvideo-bolume-niddle");            
 
-            console.log(window[player_id].controlBar.btn.volumeUnits);
-
-
-
+            window[player_id].controlBar.btn.volumeControl = volumeControl; 
+            window[player_id].controlBar.btn.volumeProgress = volumeProgress; 
+            window[player_id].controlBar.btn.volumeNiddle = volumeNiddle; 
 
 
 
+            window[player_id].controlBar.btn.volumeControl.appendChild(window[player_id].controlBar.btn.volumeProgress);
+            window[player_id].controlBar.btn.volumeControl.appendChild(window[player_id].controlBar.btn.volumeNiddle);
 
 
+            window[player_id].controlBar.plusMinusWrapper.appendChild(volumeControl);
 
-
-
-			//window[player_id].controlBar.plusMinusWrapper.appendChild( window[player_id].controlBar.btn.minusButton ); 
-        	//window[player_id].controlBar.plusMinusWrapper.appendChild( window[player_id].controlBar.btn.plusButton ); 
-
-            for(var i=0; i<=window[player_id].controlBar.btn.volumeUnits.length - 1; ++i){
-                window[player_id].controlBar.plusMinusWrapper.appendChild(window[player_id].controlBar.btn.volumeUnits[i]);
-            }
-        	
 
 
         	window[player_id].controlBar.soundWrapper.appendChild ( window[player_id].controlBar.btn.volumeUpButton ); 
@@ -412,6 +403,57 @@ function rvideolog(msg){
         }
 
 
+
+        function onVolumeNiddleMove(e){
+
+            var pxdiff = 0;
+            var player_id = settings.id;
+
+            var xlimit = window[player_id].controlBar.btn.volumeControl.offsetLeft;
+            var xlimitend = xlimit +  window[player_id].controlBar.btn.volumeControl.offsetWidth;
+            var currentPos = e.clientX;// - volumeControll.offsetLeft;
+
+
+            if(currentPos <= xlimit){
+                currentPos = xlimit;
+            }else if(currentPos >= xlimitend){
+                currentPos = xlimitend;
+            }
+
+            currentPos = currentPos - window[player_id].controlBar.btn.volumeControl.offsetLeft;
+
+            window[player_id].controlBar.btn.volumeNiddle.style.left = currentPos + "px";
+            
+            // update player volume here
+
+
+
+
+        }
+
+
+        function onVolumeNiddleDown(e){
+            
+            this.currentPositionLeft = e.clientX;
+            document.addEventListener("mousemove",onVolumeNiddleMove,{rvideo:true});
+            document.addEventListener("mouseup",onVolumeNiddleUp,{rvideo:true});
+            
+
+        }
+
+
+        // remove the event handeler when mouse release.
+        function onVolumeNiddleUp(e){
+            
+            document.removeEventListener("mousemove",onVolumeNiddleMove,{rvideo:true});            
+            document.removeEventListener("mouseup",onVolumeNiddleUp,{rvideo:true}); 
+
+
+            console.log(e);
+        }
+
+
+
         // all the event listener is applied from this function.
         function applyAllEventListener(){
 
@@ -422,11 +464,9 @@ function rvideolog(msg){
             window[player_id].controlBar.btn.fullscreenButton.addEventListener("click", onFullScreenButtonClick);
             window[player_id].controlBar.btn.closeFullscreenButton.addEventListener("click", onCloseFullscreenButtonClick);
 
+            window[player_id].controlBar.btn.volumeNiddle.addEventListener("mousedown", onVolumeNiddleDown);
 
-            // volume unit event listener
-            for(var i=0; i<=window[player_id].controlBar.btn.volumeUnits.length - 1; ++i){
-                window[player_id].controlBar.btn.volumeUnits[i].addEventListener("click",onVolumeUnitClick);
-            }            
+
 
 
             // player event
@@ -455,7 +495,8 @@ function rvideolog(msg){
         var onFullScreenButtonClick = function(){
             var player_id = settings.id; 
                 
-                <!--console.log ('it is working'); -->
+
+
                 if(window[player_id].videoWrapper.requestFullscreen){
                     window[player_id].videoWrapper.requestFullscreen();
                 } 
@@ -471,6 +512,10 @@ function rvideolog(msg){
 
             window[player_id].controlBar.btn.fullscreenButton.style.display = "none";
             window[player_id].controlBar.btn.closeFullscreenButton.style.display = "inline-block";
+
+            
+            // on full screen apply : chrome hack
+            window[player_id].videoWrapper.style.width = "100%";
         }
 
 
@@ -499,7 +544,12 @@ function rvideolog(msg){
                     }
 
              window[player_id].controlBar.btn.fullscreenButton.style.display = "inline-block";
-             window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";                    
+             window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";  
+
+
+             // on full screen close - chrome hack
+             window[player_id].videoWrapper.setAttribute("style", "") ;
+
 
             }
 
