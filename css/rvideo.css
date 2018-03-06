@@ -112,27 +112,27 @@ div.rvideo-controlbar div.volume-unit.active{
 
 div.rvideo-volume-control{
 width: 100px;
-height: 4px;
-background: #EEEEEE;
+height: 3px;
+background: #363636;
 position: relative;
 margin-top:15px;
 }
 
 
 div.rvideo-volume-progress {
-	width: 50px;
-	background: green;
-	height: 4px;
+	width: 0px;
+	background: #FFFFFF;
+	height: 3px;
 }
 
 
 div.rvideo-bolume-niddle{
 width: 10px;
 border-radius: 10px;
-background: rgba(255,0,0,1);
+background: #FFFFFF;
 height: 10px;
 position: absolute;
-left: 45px;
+left: -2px;
 top: -3px;
 }
 

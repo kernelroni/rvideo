@@ -422,9 +422,21 @@ function rvideolog(msg){
 
             currentPos = currentPos - window[player_id].controlBar.btn.volumeControl.offsetLeft;
 
-            window[player_id].controlBar.btn.volumeNiddle.style.left = currentPos + "px";
-            
+            window[player_id].controlBar.btn.volumeNiddle.style.left = (currentPos-2) + "px";
+
+
             // update player volume here
+            if(currentPos > 0){
+                window[player_id].player.volume = currentPos / 100 ;
+            }else {
+                window[player_id].player.volume = 0;
+            }
+
+
+            // update the volume progress bar
+            window[player_id].controlBar.btn.volumeProgress.style.width = currentPos + "px";
+
+            
 
 
 
@@ -447,9 +459,7 @@ function rvideolog(msg){
             
             document.removeEventListener("mousemove",onVolumeNiddleMove,{rvideo:true});            
             document.removeEventListener("mouseup",onVolumeNiddleUp,{rvideo:true}); 
-
-
-            console.log(e);
+            
         }
 
 
