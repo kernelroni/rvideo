@@ -18,7 +18,7 @@ function rvideolog(msg){
             oggurl         : 'videos/mov_bbb.ogg',
             width    	: 0,
 			height		: 0,
-            volume      : 1,   
+            volume      : 0.5,   
 			playlist	: [],
 			playlist_container_id : "rvideo-playlist",
 			default_controls : false,
@@ -314,6 +314,20 @@ function rvideolog(msg){
             window[player_id].controlBar.btn.volumeNiddle = volumeNiddle; 
 
 
+            if(!isNaN(window[player_id].settings.volume)){
+
+                    if(window[player_id].settings.volume >= 0.0 && window[player_id].settings.volume <= 1.0){
+
+                            var progressWidth = 100 * window[player_id].settings.volume ;
+                            window[player_id].controlBar.btn.volumeProgress.style.width = progressWidth + "px";
+                            window[player_id].controlBar.btn.volumeNiddle.style.left = progressWidth + "px";
+
+
+                    }
+            }
+
+
+
 
             window[player_id].controlBar.btn.volumeControl.appendChild(window[player_id].controlBar.btn.volumeProgress);
             window[player_id].controlBar.btn.volumeControl.appendChild(window[player_id].controlBar.btn.volumeNiddle);
@@ -428,8 +442,15 @@ function rvideolog(msg){
             // update player volume here
             if(currentPos > 0){
                 window[player_id].player.volume = currentPos / 100 ;
+                window[player_id].controlBar.btn.muteButton.style.display = "none";
+                window[player_id].controlBar.btn.volumeUpButton.style.display = "block";
+
+
             }else {
                 window[player_id].player.volume = 0;
+                window[player_id].controlBar.btn.muteButton.style.display = "block";
+                window[player_id].controlBar.btn.volumeUpButton.style.display = "none";  
+
             }
 
 
