@@ -14,6 +14,7 @@ function rvideolog(msg){
     	// Establish our default settings
         var settings = $.extend({
             id             : "rplayer_0", // default video object name. no space and any special char allowed, something like a variable name.
+            title          : "Video title goes here",
             mp4url         : 'videos/mov_bbb.mp4',
             oggurl         : 'videos/mov_bbb.ogg',
             width    	: 0,
@@ -74,6 +75,20 @@ function rvideolog(msg){
 			// global rplayer
 			window[player_id].player = document.createElement("video");
 			videoWrapper.appendChild(window[player_id].player);
+
+            var video_title = document.createElement("div");
+            video_title.setAttribute("id", "rvideo-title");
+            video_title.setAttribute("class", "rvideo-title");
+
+            var video_title_span = document.createElement("span");
+            video_title_span.setAttribute("id", "rvideo-title-text");
+            video_title_span.setAttribute("class", "rvideo-title-text");
+
+            video_title_span.innerHTML = settings.title;
+
+            video_title.appendChild(video_title_span);
+
+            videoWrapper.appendChild(video_title);
 			
 			// integrate settings with the video player for future use.
 			

@@ -27,6 +27,23 @@ div#rvideo-wrapper2{
 }
 
 
+div.rvideo-title{
+	position: absolute;
+	top:0px;
+	padding:0px;
+	margin:0px;
+	background: rgba(0,0,0,0.5);
+	width:100%;
+	text-align: right;
+}
+
+div.rvideo-title span.rvideo-title-text{
+	padding:5px;
+	display: inline-block;
+	color:#FFFFFF;	
+}
+
+
 /* control bar element */
 div.rvideo-controlbar{
 	width:100%;
