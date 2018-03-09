@@ -32,6 +32,8 @@ function rvideolog(msg){
 			},
             control_bar_logo : "<a href='http://kernelroni.com' target='_blank'><img src='icons/logo/rvideologo.png' /></a>",
             poster : "icons/logo/rvideoposter.png",
+            poster_play_button : true,
+            poster_pause_button : true,
 
 			controls : {
 				play : true,
@@ -64,7 +66,7 @@ function rvideolog(msg){
             var player_id = settings.id;
             window[player_id] = {}; // instance object : eg window['rplayer_0'] by default
             window[player_id].settings = settings;
-            
+            window[player_id].isInFullScreen = 0;
             
 
 			// the selector elements
@@ -87,6 +89,8 @@ function rvideolog(msg){
             video_title_span.innerHTML = settings.title;
 
             video_title.appendChild(video_title_span);
+
+            window[player_id].video_title = video_title;
 
             videoWrapper.appendChild(video_title);
 			
@@ -145,8 +149,17 @@ function rvideolog(msg){
 				addLogo(logo,videoWrapper);
 			}
 
+            // poster settings
             if(window[player_id].settings.poster){
                 window[player_id].player.setAttribute("poster",window[player_id].settings.poster);
+            }
+
+
+            // on screen play button - on poster screen
+
+            if(window[player_id].settings.poster_play_button){
+
+                
             }
 
 			
@@ -510,7 +523,12 @@ function rvideolog(msg){
             window[player_id].controlBar.btn.fullscreenButton.addEventListener("click", onFullScreenButtonClick);
             window[player_id].controlBar.btn.closeFullscreenButton.addEventListener("click", onCloseFullscreenButtonClick);
 
+
+            //window[player_id].videoWrapper.addEventListener("mouseenter", onPlayerMouseOver);
+            //window[player_id].videoWrapper.addEventListener("mouseleave", onPlayerMouseOut);
+
             window[player_id].controlBar.btn.volumeNiddle.addEventListener("mousedown", onVolumeNiddleDown);
+
 
 
 
@@ -526,6 +544,26 @@ function rvideolog(msg){
 
 
         }
+
+
+        var onPlayerMouseOver = function(){
+            var player_id = settings.id; 
+
+            $(window[player_id].video_title).slideDown();
+            $(window[player_id].controlBar).slideDown();
+
+
+        }
+
+
+        var onPlayerMouseOut = function(){
+            var player_id = settings.id; 
+
+            $(window[player_id].video_title).slideUp();
+            $(window[player_id].controlBar).slideUp();
+
+        }
+
 
         var onVolumeUnitClick = function(e){
 
@@ -562,6 +600,9 @@ function rvideolog(msg){
             
             // on full screen apply : chrome hack
             window[player_id].videoWrapper.style.width = "100%";
+
+
+            window[player_id].isInFullScreen = 1;
         }
 
 
@@ -595,7 +636,7 @@ function rvideolog(msg){
 
              // on full screen close - chrome hack
              window[player_id].videoWrapper.setAttribute("style", "") ;
-
+             window[player_id].isInFullScreen = 0;
 
             }
 
