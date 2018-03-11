@@ -32,7 +32,14 @@ function rvideolog(msg){
 			},
             control_bar_logo : "<a href='http://kernelroni.com' target='_blank'><img src='icons/logo/rvideologo.png' /></a>",
             poster : "icons/logo/rvideoposter.png",
-            poster_play_button : true,
+            poster_play_pause_button : {
+                visible : true,
+                play_button_url : "icons/play.png",
+                pause_button_url : "icons/pause.png",
+                left : 0,
+                top : 0
+
+            },
             poster_pause_button : true,
 
 			controls : {
@@ -67,6 +74,8 @@ function rvideolog(msg){
             window[player_id] = {}; // instance object : eg window['rplayer_0'] by default
             window[player_id].settings = settings;
             window[player_id].isInFullScreen = 0;
+
+            window[player_id].videoWrapper = videoWrapper;
             
 
 			// the selector elements
@@ -119,11 +128,12 @@ function rvideolog(msg){
 				window[player_id].player.setAttribute("controls", "controls");
 			}else if(!window[player_id].settings.default_controls){
 				// add custom controll bar inside the video wrapper
-				addControlBar(window[player_id].settings,videoWrapper);
+				addControlBar(window[player_id].settings);
 
 			}
 
-			// autoplay settings
+
+            // autoplay settings
 			if(window[player_id].settings.autoplay){
 				window[player_id].player.setAttribute("autoplay",settings.autoplay);
 			}
@@ -155,17 +165,74 @@ function rvideolog(msg){
             }
 
 
-            // on screen play button - on poster screen
-
-            if(window[player_id].settings.poster_play_button){
-
-                
-            }
+ 
 
 			
 			
         };
 		
+        var addPosterPlayPauseButton = function(ppimg){
+
+            var player_id = settings.id;
+
+            window[player_id].poster_play_button = new Image();
+            window[player_id].poster_play_button.src = ppimg.play_button_url;
+            window[player_id].poster_play_button.id = "poster_play_button";
+            window[player_id].poster_play_button.className = "poster_play_pause_button";
+            window[player_id].poster_play_button.style.position = "absolute";
+            //poster_play_button.style.left = ppimg.left + "px";
+            //poster_play_button.style.top = ppimg.top + "px";
+
+            window[player_id].poster_pause_button = new Image();
+            window[player_id].poster_pause_button.src = ppimg.pause_button_url;
+            window[player_id].poster_pause_button.id = "poster_pause_button";
+            window[player_id].poster_pause_button.className = "poster_play_pause_button";
+            window[player_id].poster_pause_button.style.position = "absolute";
+            window[player_id].poster_pause_button.style.display = 'none' ;
+
+            if(ppimg.left > 0){
+            window[player_id].poster_play_button.style.left = ppimg.left + "px";
+            window[player_id].poster_play_button.style.top = ppimg.top + "px";
+
+            window[player_id].poster_pause_button.style.left = ppimg.left + "px";
+            window[player_id].poster_pause_button.style.top = ppimg.top + "px";
+
+            }else{
+
+                window[player_id].poster_play_button.onload = function(){
+
+                var wrapperWidth = window[player_id].videoWrapper.offsetWidth;
+                var wrapperHeight = window[player_id].videoWrapper.offsetHeight;
+
+                var playbtnWidth = this.width;
+                var playbtnHeight = this.height;
+
+
+
+
+                playButtonX = (wrapperWidth / 2)  - (playbtnWidth /2 );
+                playButtonY = (wrapperHeight / 2)  - (playbtnHeight /2 );
+
+                window[player_id].poster_play_button.style.left = playButtonX + "px";
+                window[player_id].poster_play_button.style.top = playButtonY + "px";
+
+                window[player_id].poster_pause_button.style.left = playButtonX + "px";
+                window[player_id].poster_pause_button.style.top = playButtonY + "px";
+
+
+                
+
+
+                };
+                
+
+            }
+
+            window[player_id].videoWrapper.appendChild(window[player_id].poster_play_button);
+            window[player_id].videoWrapper.appendChild(window[player_id].poster_pause_button);
+
+
+        }        
 		
 		// add logo function defination
 		var addLogo = function(logo,videoWrapper){
@@ -186,7 +253,7 @@ function rvideolog(msg){
 
             var player_id = settings.id;
 
-            window[player_id].videoWrapper = videoWrapper;
+            
 
             // progress Bar
         	window[player_id].progressBar = document.createElement("div");
@@ -419,6 +486,12 @@ function rvideolog(msg){
 
             }
 
+           // on screen play button - on poster screen
+
+            if(window[player_id].settings.poster_play_pause_button.visible){
+
+                addPosterPlayPauseButton(window[player_id].settings.poster_play_pause_button);
+            }
 
 
             // add progress progressBar
@@ -434,7 +507,7 @@ function rvideolog(msg){
 
 
         	// append the control bar inside the main wrapper
-        	videoWrapper.appendChild( window[player_id].controlBar );
+        	window[player_id].videoWrapper.appendChild( window[player_id].controlBar );
 
 
 
@@ -520,6 +593,8 @@ function rvideolog(msg){
 
         	window[player_id].controlBar.btn.playButton.addEventListener("click", onPlayButtonClick);
         	window[player_id].controlBar.btn.pauseButton.addEventListener("click", onPauseButtonClick);
+
+
             window[player_id].controlBar.btn.fullscreenButton.addEventListener("click", onFullScreenButtonClick);
             window[player_id].controlBar.btn.closeFullscreenButton.addEventListener("click", onCloseFullscreenButtonClick);
 
@@ -530,6 +605,8 @@ function rvideolog(msg){
             window[player_id].controlBar.btn.volumeNiddle.addEventListener("mousedown", onVolumeNiddleDown);
 
 
+            window[player_id].poster_play_button.addEventListener("click", onPlayButtonClick);
+            window[player_id].poster_pause_button.addEventListener("click", onPauseButtonClick); 
 
 
 
@@ -541,7 +618,7 @@ function rvideolog(msg){
             // default hide the close full screen button
             window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";
 
-
+            console.log(window[player_id].poster_play_button);
 
         }
 

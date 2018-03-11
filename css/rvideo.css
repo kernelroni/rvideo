@@ -155,23 +155,9 @@ div.rvideo-bolume-niddle{
 
 
 
-div.rvideo .rvideo-poster-play-button {
-    left: 3em;
-    top: 2em;
-    font-size: 3em;
-    z-index: 2;
-    position: absolute;
-    width: 3em;
-    height: 1.6em;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    opacity: 1;
-    background-color: #07141e;
-    background-color: rgba(7, 20, 30, 0.7);
-    border: 0.1em solid #3b4249;
-    border-radius: 0.8em;
-
+img.poster_play_pause_button {
+position: absolute;
+width:50px;
 }
 
 
