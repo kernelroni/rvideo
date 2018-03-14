@@ -40,7 +40,6 @@ function rvideolog(msg){
                 top : 0
 
             },
-            poster_pause_button : true,
 
 			controls : {
 				play : true,
@@ -197,6 +196,9 @@ function rvideolog(msg){
             window[player_id].poster_pause_button.style.left = ppimg.left + "px";
             window[player_id].poster_pause_button.style.top = ppimg.top + "px";
 
+
+
+
             }else{
 
                 window[player_id].poster_play_button.onload = function(){
@@ -220,16 +222,17 @@ function rvideolog(msg){
                 window[player_id].poster_pause_button.style.top = playButtonY + "px";
 
 
-                
-
 
                 };
+
+            window[player_id].poster_play_button.style.display = "block";
+            window[player_id].videoWrapper.appendChild(window[player_id].poster_play_button);
+            window[player_id].videoWrapper.appendChild(window[player_id].poster_pause_button);                
                 
 
             }
 
-            window[player_id].videoWrapper.appendChild(window[player_id].poster_play_button);
-            window[player_id].videoWrapper.appendChild(window[player_id].poster_pause_button);
+
 
 
         }        
@@ -615,10 +618,27 @@ function rvideolog(msg){
 
             window[player_id].progressBar.addEventListener("click", onProgressBarProgressClick,true);
 
+            window[player_id].player.addEventListener("click", changePlayerState.bind(window[player_id].player));
+
             // default hide the close full screen button
             window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";
 
             console.log(window[player_id].poster_play_button);
+
+        }
+
+
+        var changePlayerState = function(){
+
+            if(this.paused){
+                //this.play();
+                onPlayButtonClick(this);
+
+            }else{
+                //this.pause();
+                onPauseButtonClick(this);
+            }
+
 
         }
 

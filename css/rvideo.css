@@ -160,6 +160,10 @@ position: absolute;
 width:50px;
 }
 
+img.poster_play_button{
+	display:none;
+}
+
 
 
 
