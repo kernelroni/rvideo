@@ -155,16 +155,30 @@ div.rvideo-bolume-niddle{
 
 
 
-img.poster_play_pause_button {
-position: absolute;
+img.poster_play_button{
 width:50px;
+opacity: 0;
+
 }
 
-img.poster_play_button{
+img.poster_pause_button{
 	display:none;
 }
 
+@keyframes hidePlayButton {
+    from {
+    	display:block;
+    	opacity: 1;}
 
+    to {opacity: 0;}
+}
+
+/* The element to apply the animation to */
+.hide_play_button{
+	opacity: 0;
+    animation-name: hidePlayButton;
+    animation-duration: 1s;
+}
 
 
 

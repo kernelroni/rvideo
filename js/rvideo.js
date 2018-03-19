@@ -177,7 +177,7 @@ function rvideolog(msg){
             window[player_id].poster_play_button = new Image();
             window[player_id].poster_play_button.src = ppimg.play_button_url;
             window[player_id].poster_play_button.id = "poster_play_button";
-            window[player_id].poster_play_button.className = "poster_play_pause_button";
+            window[player_id].poster_play_button.className = "poster_play_button";
             window[player_id].poster_play_button.style.position = "absolute";
             //poster_play_button.style.left = ppimg.left + "px";
             //poster_play_button.style.top = ppimg.top + "px";
@@ -185,9 +185,9 @@ function rvideolog(msg){
             window[player_id].poster_pause_button = new Image();
             window[player_id].poster_pause_button.src = ppimg.pause_button_url;
             window[player_id].poster_pause_button.id = "poster_pause_button";
-            window[player_id].poster_pause_button.className = "poster_play_pause_button";
+            window[player_id].poster_pause_button.className = "poster_pause_button";
             window[player_id].poster_pause_button.style.position = "absolute";
-            window[player_id].poster_pause_button.style.display = 'none' ;
+            
 
             if(ppimg.left > 0){
             window[player_id].poster_play_button.style.left = ppimg.left + "px";
@@ -196,18 +196,31 @@ function rvideolog(msg){
             window[player_id].poster_pause_button.style.left = ppimg.left + "px";
             window[player_id].poster_pause_button.style.top = ppimg.top + "px";
 
-
+            window[player_id].poster_play_button.style.display = "block";
+            window[player_id].videoWrapper.appendChild(window[player_id].poster_play_button);
+            window[player_id].videoWrapper.appendChild(window[player_id].poster_pause_button);
 
 
             }else{
 
+
+
+
                 window[player_id].poster_play_button.onload = function(){
+
+                
+                window[player_id].videoWrapper.appendChild(window[player_id].poster_play_button);
+                window[player_id].videoWrapper.appendChild(window[player_id].poster_pause_button);                     
+
+                    //alert("play load");
 
                 var wrapperWidth = window[player_id].videoWrapper.offsetWidth;
                 var wrapperHeight = window[player_id].videoWrapper.offsetHeight;
 
-                var playbtnWidth = this.width;
-                var playbtnHeight = this.height;
+                var playbtnWidth = this.clientWidth;
+                var playbtnHeight = this.clientHeight;
+
+                //console.log(playbtnWidth + " " + playbtnHeight);
 
 
 
@@ -220,14 +233,14 @@ function rvideolog(msg){
 
                 window[player_id].poster_pause_button.style.left = playButtonX + "px";
                 window[player_id].poster_pause_button.style.top = playButtonY + "px";
+    
+               
 
 
 
                 };
 
-            window[player_id].poster_play_button.style.display = "block";
-            window[player_id].videoWrapper.appendChild(window[player_id].poster_play_button);
-            window[player_id].videoWrapper.appendChild(window[player_id].poster_pause_button);                
+                
                 
 
             }
@@ -792,6 +805,11 @@ function rvideolog(msg){
         	window[player_id].controlBar.btn.playButton.style.display = "none";
         	window[player_id].controlBar.btn.pauseButton.style.display = "block";
 
+            //window[player_id].poster_play_button.style.display = "none";
+            window[player_id].poster_play_button.className = "poster_play_button hide_play_button";
+
+           
+
         }
 
         // on pause button click
@@ -801,7 +819,10 @@ function rvideolog(msg){
 
         	window[player_id].player.pause();
         	window[player_id].controlBar.btn.playButton.style.display = "block";
-        	window[player_id].controlBar.btn.pauseButton.style.display = "none";        	
+        	window[player_id].controlBar.btn.pauseButton.style.display = "none";
+
+            //window[player_id].poster_play_button.style.display = "block"; 
+            window[player_id].poster_play_button.className = "poster_play_button";                   	
 
         }
 
