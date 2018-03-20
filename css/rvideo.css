@@ -167,13 +167,17 @@ img.poster_pause_button{
 
 @keyframes hidePlayButton {
     from {
+    	transform: scale(1);
     	display:block;
-    	opacity: 1;}
+    	opacity: 1;
+    }
 
-    to {opacity: 0;}
+    to {
+    	transform: scale(2);
+    	opacity: 0;
+    }
 }
 
-/* The element to apply the animation to */
 .hide_play_button{
 	opacity: 0;
     animation-name: hidePlayButton;
@@ -182,7 +186,9 @@ img.poster_pause_button{
 
 
 
-
+video {
+    object-fit: fill;
+}
 
 
 
