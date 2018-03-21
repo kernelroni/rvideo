@@ -17,8 +17,8 @@ function rvideolog(msg){
             title          : "Video title goes here",
             mp4url         : 'videos/mov_bbb.mp4',
             oggurl         : 'videos/mov_bbb.ogg',
-            width    	: 0,
-			height		: 0,
+            width    	: "650px",
+			height		: "340px",
             volume      : 0.5,   
 			playlist	: [],
 			playlist_container_id : "rvideo-playlist",
@@ -111,9 +111,23 @@ function rvideolog(msg){
 			window[player_id].player.setAttribute("id","video_"+player_id);
         	window[player_id].player.setAttribute("class","video_"+player_id);
 
-            window[player_id].player.style.width = "100%";
-            window[player_id].player.style.height = "100%";            
+            
 
+            if(settings.width.toString().length > 0 ){
+                window[player_id].videoWrapper.style.width = settings.width.toString();    
+            }else{
+                window[player_id].videoWrapper.style.width = "100%";
+            }
+            
+
+            if(settings.height.toString().length > 0 ){
+                window[player_id].videoWrapper.style.height = settings.height;    
+            }else{
+                window[player_id].videoWrapper.style.height = "100%";
+            }
+            
+            window[player_id].player.style.width = "100%";
+            window[player_id].player.style.height = "100%";
 
 			
 			if (window[player_id].player.canPlayType("video/mp4")) {
@@ -179,8 +193,7 @@ function rvideolog(msg){
             window[player_id].poster_play_button.id = "poster_play_button";
             window[player_id].poster_play_button.className = "poster_play_button";
             window[player_id].poster_play_button.style.position = "absolute";
-            //poster_play_button.style.left = ppimg.left + "px";
-            //poster_play_button.style.top = ppimg.top + "px";
+
 
             window[player_id].poster_pause_button = new Image();
             window[player_id].poster_pause_button.src = ppimg.pause_button_url;
@@ -301,15 +314,15 @@ function rvideolog(msg){
 
             window[player_id].controlBar = document.createElement("div");
         	window[player_id].controlBar.setAttribute("id","controlBar_"+player_id);
-        	window[player_id].controlBar.setAttribute("class","rvideo-controlbar controlBar_"+player_id);
+        	window[player_id].controlBar.setAttribute("class","rvideo-controlbar controlbar_"+player_id);
 
         	var controlBarLeftPanel = document.createElement("div");
-        	controlBarLeftPanel.setAttribute("id","rvideo-controlBarLeftPanel");
-        	controlBarLeftPanel.setAttribute("class","rvideo-controlBarLeftPanel");
+        	controlBarLeftPanel.setAttribute("id","rvideo-controlbarLeftPanel");
+        	controlBarLeftPanel.setAttribute("class","rvideo-controlbarLeftPanel");
 
         	var controlBarRightPanel = document.createElement("div");
-        	controlBarRightPanel.setAttribute("id","rvideo-controlBarRightPanel");
-        	controlBarRightPanel.setAttribute("class","rvideo-controlBarRightPanel");
+        	controlBarRightPanel.setAttribute("id","rvideo-controlbarRightPanel");
+        	controlBarRightPanel.setAttribute("class","rvideo-controlbarRightPanel");
 
 
             window[player_id].controlBar.leftPanel = controlBarLeftPanel;
@@ -330,8 +343,8 @@ function rvideolog(msg){
         	if(window[player_id].settings.controls.play){            
 
         	window[player_id].controlBar.playPauseWrapper = document.createElement("div"); // play pause button wrapper
-			window[player_id].controlBar.playPauseWrapper.setAttribute("id","rvideo-playPaushWrapper");
-        	window[player_id].controlBar.playPauseWrapper.setAttribute("class","rleft rvideo-playPaushWrapper");  
+			window[player_id].controlBar.playPauseWrapper.setAttribute("id","rvideo-playPauseWrapper");
+        	window[player_id].controlBar.playPauseWrapper.setAttribute("class","rleft rvideo-playPauseWrapper");  
 
 
 
@@ -620,9 +633,10 @@ function rvideolog(msg){
 
             window[player_id].controlBar.btn.volumeNiddle.addEventListener("mousedown", onVolumeNiddleDown);
 
-
+            if(window[player_id].settings.poster_play_pause_button.visible){
             window[player_id].poster_play_button.addEventListener("click", onPlayButtonClick);
             window[player_id].poster_pause_button.addEventListener("click", onPauseButtonClick); 
+            }
 
 
 
@@ -636,7 +650,7 @@ function rvideolog(msg){
             // default hide the close full screen button
             window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";
 
-            console.log(window[player_id].poster_play_button);
+            //console.log(window[player_id].poster_play_button);
 
         }
 
@@ -710,6 +724,7 @@ function rvideolog(msg){
             
             // on full screen apply : chrome hack
             window[player_id].videoWrapper.style.width = "100%";
+            window[player_id].videoWrapper.style.height = "100%";
 
 
             window[player_id].isInFullScreen = 1;
@@ -745,7 +760,8 @@ function rvideolog(msg){
 
 
              // on full screen close - chrome hack
-             window[player_id].videoWrapper.setAttribute("style", "") ;
+            window[player_id].videoWrapper.style.width = settings.width;
+            window[player_id].videoWrapper.style.height = settings.height;
              window[player_id].isInFullScreen = 0;
 
             }
