@@ -68,6 +68,8 @@ function rvideolog(msg){
         var init = function(videoWrapper){
 
             videoWrapper.setAttribute("data-rplayer-id", settings.id);
+            videoWrapper.style.position = "relative";
+
             
             var player_id = settings.id;
             window[player_id] = {}; // instance object : eg window['rplayer_0'] by default
@@ -261,8 +263,10 @@ function rvideolog(msg){
 
 
 
-        }        
-		
+        }
+
+
+
 		// add logo function defination
 		var addLogo = function(logo,videoWrapper){
 			var logoImg = new Image();
@@ -383,8 +387,10 @@ function rvideolog(msg){
         	window[player_id].controlBar.volumeWrapper.setAttribute("class","rleft rvideo-volumeWrapper");
 
         	window[player_id].controlBar.plusMinusWrapper = document.createElement("div"); // play pause button wrapper
-			window[player_id].controlBar.plusMinusWrapper.setAttribute("id","rvideo-plusMinusWrapper");
-        	window[player_id].controlBar.plusMinusWrapper.setAttribute("class","rleft rvideo-plusMinusWrapper");     
+			window[player_id].controlBar.plusMinusWrapper.setAttribute("id","rvideo-plus_minus_wrapper");
+        	window[player_id].controlBar.plusMinusWrapper.setAttribute("class","rleft rvideo-plus_minus_wrapper");
+            window[player_id].controlBar.plusMinusWrapper.style.display = "none";
+
 
 
         	window[player_id].controlBar.soundWrapper = document.createElement("div");
@@ -453,27 +459,27 @@ function rvideolog(msg){
 
 
 
-            window[player_id].controlBar.btn.volumeControl.appendChild(window[player_id].controlBar.btn.volumeProgress);
-            window[player_id].controlBar.btn.volumeControl.appendChild(window[player_id].controlBar.btn.volumeNiddle);
+                window[player_id].controlBar.btn.volumeControl.appendChild(window[player_id].controlBar.btn.volumeProgress);
+                window[player_id].controlBar.btn.volumeControl.appendChild(window[player_id].controlBar.btn.volumeNiddle);
 
 
-            window[player_id].controlBar.plusMinusWrapper.appendChild(volumeControl);
-
-
-
-        	window[player_id].controlBar.soundWrapper.appendChild ( window[player_id].controlBar.btn.volumeUpButton ); 
-        	window[player_id].controlBar.soundWrapper.appendChild ( window[player_id].controlBar.btn.muteButton );         	       	
+                window[player_id].controlBar.plusMinusWrapper.appendChild(volumeControl);
 
 
 
-        	window[player_id].controlBar.volumeWrapper.appendChild( window[player_id].controlBar.soundWrapper );
-        	window[player_id].controlBar.volumeWrapper.appendChild( window[player_id].controlBar.plusMinusWrapper );
+            	window[player_id].controlBar.soundWrapper.appendChild ( window[player_id].controlBar.btn.volumeUpButton ); 
+            	window[player_id].controlBar.soundWrapper.appendChild ( window[player_id].controlBar.btn.muteButton );         	       	
 
 
-        	window[player_id].controlBar.leftPanel.appendChild( window[player_id].controlBar.volumeWrapper );
+
+            	window[player_id].controlBar.volumeWrapper.appendChild( window[player_id].controlBar.soundWrapper );
+            	window[player_id].controlBar.volumeWrapper.appendChild( window[player_id].controlBar.plusMinusWrapper );
 
 
-        	}        	
+            	window[player_id].controlBar.leftPanel.appendChild( window[player_id].controlBar.volumeWrapper );
+
+
+        	}       	
 
             
 
@@ -628,14 +634,22 @@ function rvideolog(msg){
             window[player_id].controlBar.btn.closeFullscreenButton.addEventListener("click", onCloseFullscreenButtonClick);
 
 
+            window[player_id].controlBar.volumeWrapper.addEventListener("mouseenter",function(){
+                window[player_id].controlBar.plusMinusWrapper.style.display = "block";
+            });
+            
+            window[player_id].controlBar.volumeWrapper.addEventListener("mouseleave",function(){
+                window[player_id].controlBar.plusMinusWrapper.style.display = "none";
+            });
+
             //window[player_id].videoWrapper.addEventListener("mouseenter", onPlayerMouseOver);
             //window[player_id].videoWrapper.addEventListener("mouseleave", onPlayerMouseOut);
 
             window[player_id].controlBar.btn.volumeNiddle.addEventListener("mousedown", onVolumeNiddleDown);
 
             if(window[player_id].settings.poster_play_pause_button.visible){
-            window[player_id].poster_play_button.addEventListener("click", onPlayButtonClick);
-            window[player_id].poster_pause_button.addEventListener("click", onPauseButtonClick); 
+            window[player_id].poster_play_button.addEventListener("click", changePlayerState.bind(window[player_id].player));
+            window[player_id].poster_pause_button.addEventListener("click", changePlayerState.bind(window[player_id].player)); 
             }
 
 
@@ -645,6 +659,8 @@ function rvideolog(msg){
 
             window[player_id].progressBar.addEventListener("click", onProgressBarProgressClick,true);
 
+
+            // the player click event listener
             window[player_id].player.addEventListener("click", changePlayerState.bind(window[player_id].player));
 
             // default hide the close full screen button
@@ -656,6 +672,8 @@ function rvideolog(msg){
 
 
         var changePlayerState = function(){
+
+
 
             if(this.paused){
                 //this.play();
@@ -699,6 +717,35 @@ function rvideolog(msg){
         }
 
 
+        var updatePosterPlayPauseButtonPosition =  function(player_id){
+
+
+                var wrapperWidth = window[player_id].videoWrapper.offsetWidth;
+                var wrapperHeight = window[player_id].videoWrapper.offsetHeight;
+
+                var playbtnWidth = window[player_id].poster_play_button.clientWidth;
+                var playbtnHeight = window[player_id].poster_play_button.clientHeight;
+
+                //console.log(playbtnWidth + " " + playbtnHeight);
+                console.log(wrapperWidth + " " + wrapperHeight);
+
+
+
+                playButtonX = (wrapperWidth / 2)  - (playbtnWidth /2 );
+                playButtonY = (wrapperHeight / 2)  - (playbtnHeight /2 );
+
+                window[player_id].poster_play_button.style.left = playButtonX + "px";
+                window[player_id].poster_play_button.style.top = playButtonY + "px";
+
+                window[player_id].poster_pause_button.style.left = playButtonX + "px";
+                window[player_id].poster_pause_button.style.top = playButtonY + "px";
+
+                //alert("Update poster button");
+                //console.log(window[player_id].poster_pause_button);
+                //console.log(player_id);
+
+        }
+
         // on full screen button click
         var onFullScreenButtonClick = function(){
             var player_id = settings.id; 
@@ -728,6 +775,12 @@ function rvideolog(msg){
 
 
             window[player_id].isInFullScreen = 1;
+             
+             // update the poster play pause button after 1 sec. 
+             setTimeout(function(){
+                updatePosterPlayPauseButtonPosition(player_id);
+             },1000);
+
         }
 
 
@@ -762,9 +815,20 @@ function rvideolog(msg){
              // on full screen close - chrome hack
             window[player_id].videoWrapper.style.width = settings.width;
             window[player_id].videoWrapper.style.height = settings.height;
-             window[player_id].isInFullScreen = 0;
+            window[player_id].isInFullScreen = 0;
+
+
+
+             // update the poster play pause button after 1 sec. 
+             setTimeout(function(){
+                updatePosterPlayPauseButtonPosition(player_id);
+             },1000);
 
             }
+
+
+
+
 
         }
 
@@ -818,11 +882,10 @@ function rvideolog(msg){
 
             var player_id = settings.id; 
         	window[player_id].player.play();
-        	window[player_id].controlBar.btn.playButton.style.display = "none";
-        	window[player_id].controlBar.btn.pauseButton.style.display = "block";
-
             //window[player_id].poster_play_button.style.display = "none";
             window[player_id].poster_play_button.className = "poster_play_button hide_play_button";
+            window[player_id].poster_pause_button.className = "poster_pause_button";
+            
 
            
 
@@ -834,11 +897,10 @@ function rvideolog(msg){
             var player_id = settings.id; 
 
         	window[player_id].player.pause();
-        	window[player_id].controlBar.btn.playButton.style.display = "block";
-        	window[player_id].controlBar.btn.pauseButton.style.display = "none";
 
             //window[player_id].poster_play_button.style.display = "block"; 
-            window[player_id].poster_play_button.className = "poster_play_button";                   	
+            window[player_id].poster_play_button.className = "poster_play_button";
+            window[player_id].poster_pause_button.className = "poster_pause_button hide_pause_button";                	
 
         }
 

@@ -6,27 +6,6 @@ body{
 /* player wrapper div */
 
 
-div#rvideo-wrapper{
-	position: relative;
-	text-align: center;
-	
-}
-
-div#rvideo-wrapper:fullscreen{
-	width:100%;
-	height: 100%;
-}
-
-
-div#rvideo-wrapper2{
-	
-	width:640px;
-	position: relative;
-	text-align: center;
-	
-}
-
-
 div.rvideo-title{
 	position: absolute;
 	top:0px;
@@ -160,14 +139,18 @@ opacity: 0;
 }
 
 img.poster_pause_button{
-	display:none;
+width:50px;
+opacity: 0;
+
 }
+
+
 
 @keyframes hidePlayButton {
     from {
     	transform: scale(1);
     	display:block;
-    	opacity: 1;
+    	opacity: 0.5;
     }
 
     to {
@@ -176,13 +159,31 @@ img.poster_pause_button{
     }
 }
 
+@keyframes hidePauseButton {
+    from {
+    	transform: scale(2);
+    	display:block;
+    	opacity: 0.5;
+    }
+
+    to {
+    	transform: scale(1);
+    	opacity: 0;
+    }
+}
+
+
 .hide_play_button{
 	opacity: 0;
     animation-name: hidePlayButton;
     animation-duration: 1s;
 }
 
-
+.hide_pause_button{
+	opacity: 0;
+    animation-name: hidePauseButton;
+    animation-duration: 1s;
+}
 
 video {
     object-fit: fill;
