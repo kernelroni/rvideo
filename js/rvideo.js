@@ -15,8 +15,8 @@ function rvideolog(msg){
         var settings = $.extend({
             id             : "rplayer_0", // default video object name. no space and any special char allowed, something like a variable name.
             title          : "Video title goes here",
-            mp4url         : 'videos/mov_bbb.mp4',
-            oggurl         : 'videos/mov_bbb.ogg',
+            mp4url         : '',
+            webmurl         : '',
             width    	: "650px",
 			height		: "340px",
             volume      : 0.5,   
@@ -117,14 +117,14 @@ function rvideolog(msg){
 
             if(settings.width.toString().length > 0 ){
                 window[player_id].videoWrapper.style.width = settings.width.toString();    
-            }else{
+            }else {
                 window[player_id].videoWrapper.style.width = "100%";
             }
             
 
             if(settings.height.toString().length > 0 ){
                 window[player_id].videoWrapper.style.height = settings.height;    
-            }else{
+            }else {
                 window[player_id].videoWrapper.style.height = "100%";
             }
             
@@ -132,10 +132,10 @@ function rvideolog(msg){
             window[player_id].player.style.height = "100%";
 
 			
-			if (window[player_id].player.canPlayType("video/mp4")) {
+			if (window[player_id].settings.mp4url) {
 				window[player_id].player.setAttribute("src",window[player_id].settings.mp4url);
 			} else {
-				window[player_id].player.setAttribute("src",window[player_id].settings.oggurl);
+				window[player_id].player.setAttribute("src",window[player_id].settings.webmurl);
 			}			
 
 			// show the player default controls - provided by the browser.
@@ -882,10 +882,11 @@ function rvideolog(msg){
 
             var player_id = settings.id; 
         	window[player_id].player.play();
-            //window[player_id].poster_play_button.style.display = "none";
+            window[player_id].poster_play_button.style.display = "none";
             window[player_id].poster_play_button.className = "poster_play_button hide_play_button";
             window[player_id].poster_pause_button.className = "poster_pause_button";
-            
+            window[player_id].controlBar.btn.playButton.style.display = 'none';
+            window[player_id].controlBar.btn.pauseButton.style.display = 'block';
 
            
 
@@ -898,9 +899,11 @@ function rvideolog(msg){
 
         	window[player_id].player.pause();
 
-            //window[player_id].poster_play_button.style.display = "block"; 
+            window[player_id].poster_play_button.style.display = "block"; 
             window[player_id].poster_play_button.className = "poster_play_button";
             window[player_id].poster_pause_button.className = "poster_pause_button hide_pause_button";                	
+            window[player_id].controlBar.btn.playButton.style.display = 'block';
+            window[player_id].controlBar.btn.pauseButton.style.display = 'none';
 
         }
 
