@@ -135,7 +135,10 @@ div.rvideo-bolume-niddle{
 img.poster_play_button{
 width:50px;
 opacity: 0;
+}
 
+img.poster_play_button_firsttime{
+opacity: 1;
 }
 
 img.poster_pause_button{

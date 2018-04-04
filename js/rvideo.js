@@ -14,7 +14,7 @@ function rvideolog(msg){
     	// Establish our default settings
         var settings = $.extend({
             id             : "rplayer_0", // default video object name. no space and any special char allowed, something like a variable name.
-            title          : "Video title goes here",
+            title          : "",
             mp4url         : '',
             webmurl         : '',
             width    	: "650px",
@@ -85,9 +85,12 @@ function rvideolog(msg){
 
 
 			// global rplayer
+
 			window[player_id].player = document.createElement("video");
 			videoWrapper.appendChild(window[player_id].player);
 
+
+            if(settings.title.length){
             var video_title = document.createElement("div");
             video_title.setAttribute("id", "rvideo-title");
             video_title.setAttribute("class", "rvideo-title");
@@ -103,6 +106,7 @@ function rvideolog(msg){
             window[player_id].video_title = video_title;
 
             videoWrapper.appendChild(video_title);
+            }
 			
 			// integrate settings with the video player for future use.
 			
@@ -193,7 +197,7 @@ function rvideolog(msg){
             window[player_id].poster_play_button = new Image();
             window[player_id].poster_play_button.src = ppimg.play_button_url;
             window[player_id].poster_play_button.id = "poster_play_button";
-            window[player_id].poster_play_button.className = "poster_play_button";
+            window[player_id].poster_play_button.className = "poster_play_button poster_play_button_firsttime";
             window[player_id].poster_play_button.style.position = "absolute";
 
 
@@ -882,7 +886,7 @@ function rvideolog(msg){
 
             var player_id = settings.id; 
         	window[player_id].player.play();
-            window[player_id].poster_play_button.style.display = "none";
+            
             window[player_id].poster_play_button.className = "poster_play_button hide_play_button";
             window[player_id].poster_pause_button.className = "poster_pause_button";
             window[player_id].controlBar.btn.playButton.style.display = 'none';
@@ -899,7 +903,7 @@ function rvideolog(msg){
 
         	window[player_id].player.pause();
 
-            window[player_id].poster_play_button.style.display = "block"; 
+            
             window[player_id].poster_play_button.className = "poster_play_button";
             window[player_id].poster_pause_button.className = "poster_pause_button hide_pause_button";                	
             window[player_id].controlBar.btn.playButton.style.display = 'block';
