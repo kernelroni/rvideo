@@ -24,11 +24,15 @@ function rvideolog(msg){
 			playlist_container_id : "rvideo-playlist",
 			default_controls : false,
 			control_bar_position : "bottom",
+            controlbar : {
+                type : "none", // rvideo,default,none
+                position : "bottom", // top
+            },
 			autoplay : false,
 			logo : {
 				url : "icons/logo/rvideologo.png",
 				left : 10,
-				top : 10
+				top : 20
 			},
             control_bar_logo : "<a href='http://kernelroni.com' target='_blank'><img src='icons/logo/rvideologo.png' /></a>",
             poster : "icons/logo/rvideoposter.png",
@@ -143,13 +147,23 @@ function rvideolog(msg){
 			}			
 
 			// show the player default controls - provided by the browser.
-			if(window[player_id].settings.default_controls){
+			if(window[player_id].settings.controlbar.type == "default"){
 				window[player_id].player.setAttribute("controls", "controls");
-			}else if(!window[player_id].settings.default_controls){
+			}else if(window[player_id].settings.controlbar.type == "rvideo"){
 				// add custom controll bar inside the video wrapper
 				addControlBar(window[player_id].settings);
 
-			}
+			}else{
+
+                // no control bar
+            }
+
+           // on screen play button - on poster screen
+
+            if(window[player_id].settings.poster_play_pause_button.visible){
+
+                addPosterPlayPauseButton(window[player_id].settings.poster_play_pause_button);
+            }            
 
 
             // autoplay settings
@@ -186,6 +200,8 @@ function rvideolog(msg){
 
  
 
+            // apply all control button event listeners
+            applyAllEventListener();
 			
 			
         };
@@ -291,8 +307,7 @@ function rvideolog(msg){
             var player_id = settings.id;
 
             
-
-            // progress Bar
+                        // progress Bar
         	window[player_id].progressBar = document.createElement("div");
             window[player_id].progressBar.setAttribute("id","progressBar"+player_id);
             window[player_id].progressBar.setAttribute("class","rvideo-progressBar progressBar"+player_id);
@@ -337,8 +352,10 @@ function rvideolog(msg){
             window[player_id].controlBar.rightPanel = controlBarRightPanel;
 
 
-        	if(window[player_id].settings.control_bar_position == "top"){
-        		window[player_id].controlBar.style.top = "0px";        		
+        	if(window[player_id].settings.controlbar.position == "top"){
+        		window[player_id].controlBar.style.top = "0px";  
+                jQuery(window[player_id].controlBar).addClass("top");
+
         	}else{
         		window[player_id].controlBar.style.bottom = "0px";
         	}
@@ -525,14 +542,6 @@ function rvideolog(msg){
 
             }
 
-           // on screen play button - on poster screen
-
-            if(window[player_id].settings.poster_play_pause_button.visible){
-
-                addPosterPlayPauseButton(window[player_id].settings.poster_play_pause_button);
-            }
-
-
             // add progress progressBar
             window[player_id].controlBar.appendChild( window[player_id].progressBar );
 
@@ -551,8 +560,6 @@ function rvideolog(msg){
 
 
 
-        	// apply all control button event listeners
-        	applyAllEventListener();
 
         }
 
@@ -630,6 +637,8 @@ function rvideolog(msg){
 
             var player_id = settings.id;
 
+            if(window[player_id].settings.controlbar.type == "rvideo"){
+
         	window[player_id].controlBar.btn.playButton.addEventListener("click", onPlayButtonClick);
         	window[player_id].controlBar.btn.pauseButton.addEventListener("click", onPauseButtonClick);
 
@@ -649,7 +658,16 @@ function rvideolog(msg){
             //window[player_id].videoWrapper.addEventListener("mouseenter", onPlayerMouseOver);
             //window[player_id].videoWrapper.addEventListener("mouseleave", onPlayerMouseOut);
 
+            // player event
             window[player_id].controlBar.btn.volumeNiddle.addEventListener("mousedown", onVolumeNiddleDown);
+
+
+            window[player_id].progressBar.addEventListener("click", onProgressBarProgressClick,true); 
+            // default hide the close full screen button                       
+            window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";
+
+             window[player_id].player.addEventListener("timeupdate", updateProgressBarProgress );           
+        }
 
             if(window[player_id].settings.poster_play_pause_button.visible){
             window[player_id].poster_play_button.addEventListener("click", changePlayerState.bind(window[player_id].player));
@@ -658,17 +676,12 @@ function rvideolog(msg){
 
 
 
-            // player event
-            window[player_id].player.addEventListener("timeupdate", updateProgressBarProgress );
-
-            window[player_id].progressBar.addEventListener("click", onProgressBarProgressClick,true);
-
 
             // the player click event listener
             window[player_id].player.addEventListener("click", changePlayerState.bind(window[player_id].player));
 
-            // default hide the close full screen button
-            window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";
+
+
 
             //console.log(window[player_id].poster_play_button);
 
@@ -889,8 +902,11 @@ function rvideolog(msg){
             
             window[player_id].poster_play_button.className = "poster_play_button hide_play_button";
             window[player_id].poster_pause_button.className = "poster_pause_button";
-            window[player_id].controlBar.btn.playButton.style.display = 'none';
-            window[player_id].controlBar.btn.pauseButton.style.display = 'block';
+
+            if(window[player_id].settings.controlbar.type == "rvideo"){            
+                window[player_id].controlBar.btn.playButton.style.display = 'none';
+                window[player_id].controlBar.btn.pauseButton.style.display = 'block';
+            }
 
            
 
@@ -905,9 +921,12 @@ function rvideolog(msg){
 
             
             window[player_id].poster_play_button.className = "poster_play_button";
-            window[player_id].poster_pause_button.className = "poster_pause_button hide_pause_button";                	
-            window[player_id].controlBar.btn.playButton.style.display = 'block';
-            window[player_id].controlBar.btn.pauseButton.style.display = 'none';
+            window[player_id].poster_pause_button.className = "poster_pause_button hide_pause_button";
+
+            if(window[player_id].settings.controlbar.type == "rvideo"){                	
+                window[player_id].controlBar.btn.playButton.style.display = 'block';
+                window[player_id].controlBar.btn.pauseButton.style.display = 'none';
+            }
 
         }
 

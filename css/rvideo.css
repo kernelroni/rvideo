@@ -35,6 +35,10 @@ div.rvideo-controlbar{
 	background: linear-gradient(transparent, black); /* Standard syntax (must be last) */
 }
 
+/* control bar element */
+div.rvideo-controlbar.top{
+	background: linear-gradient(black,transparent); /* Standard syntax (must be last) */
+}
 
 
 
