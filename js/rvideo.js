@@ -25,7 +25,7 @@ function rvideolog(msg){
 			default_controls : false,
 			control_bar_position : "bottom",
             controlbar : {
-                type : "none", // rvideo,default,none
+                type : "rvideo", // rvideo,default,none
                 position : "bottom", // top
             },
 			autoplay : false,
@@ -624,9 +624,13 @@ function rvideolog(msg){
 
         // remove the event handeler when mouse release.
         function onVolumeNiddleUp(e){
+
+            var player_id = settings.id;
             
             document.removeEventListener("mousemove",onVolumeNiddleMove,{rvideo:true});            
-            document.removeEventListener("mouseup",onVolumeNiddleUp,{rvideo:true}); 
+            document.removeEventListener("mouseup",onVolumeNiddleUp,{rvideo:true});
+
+            window[player_id].controlBar.plusMinusWrapper.style.display = "none"; 
             
         }
 
@@ -652,7 +656,7 @@ function rvideolog(msg){
             });
             
             window[player_id].controlBar.volumeWrapper.addEventListener("mouseleave",function(){
-                window[player_id].controlBar.plusMinusWrapper.style.display = "none";
+                //window[player_id].controlBar.plusMinusWrapper.style.display = "none";
             });
 
             //window[player_id].videoWrapper.addEventListener("mouseenter", onPlayerMouseOver);
@@ -757,9 +761,6 @@ function rvideolog(msg){
                 window[player_id].poster_pause_button.style.left = playButtonX + "px";
                 window[player_id].poster_pause_button.style.top = playButtonY + "px";
 
-                //alert("Update poster button");
-                //console.log(window[player_id].poster_pause_button);
-                //console.log(player_id);
 
         }
 

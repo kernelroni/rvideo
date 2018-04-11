@@ -25,14 +25,15 @@ div.rvideo-title span.rvideo-title-text{
 
 /* control bar element */
 div.rvideo-controlbar{
-	width:100%;
+	width:94%;
 	position: absolute;
     height: 36px;
     line-height: 32px;
     font-size: 109%;
     text-align: left;
     direction: ltr;
-	background: linear-gradient(transparent, black); /* Standard syntax (must be last) */
+	background: linear-gradient(transparent, black); 
+	left:3%;
 }
 
 /* control bar element */
