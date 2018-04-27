@@ -25,7 +25,7 @@ div.rvideo-title span.rvideo-title-text{
 
 /* control bar element */
 div.rvideo-controlbar{
-	width:94%;
+	width:100%;
 	position: absolute;
     height: 36px;
     line-height: 32px;
@@ -33,7 +33,6 @@ div.rvideo-controlbar{
     text-align: left;
     direction: ltr;
 	background: linear-gradient(transparent, black); 
-	left:3%;
 }
 
 /* control bar element */
@@ -54,7 +53,7 @@ div.rright{
 
 div.rvideo-controlbar div.rvideo-progressBar{
 	/*background: #fc0;*/
-	background: #EEEEEE;
+	background: #666666;
 }
 
 div.rvideo-controlbar div.rvideo-progressBarProgress{
@@ -198,6 +197,10 @@ video {
 }
 
 
-
+div.timerduration{
+	color:white;
+	margin-right: 5px;
+	font-size: 80%;
+}
 
 

@@ -31,7 +31,7 @@ function rvideolog(msg){
 			autoplay : false,
 			logo : {
 				url : "icons/logo/rvideologo.png",
-				left : 10,
+				left : 60,
 				top : 20
 			},
             control_bar_logo : "<a href='http://kernelroni.com' target='_blank'><img src='icons/logo/rvideologo.png' /></a>",
@@ -314,7 +314,7 @@ function rvideolog(msg){
             window[player_id].progressBar.style.position = "relative";
             window[player_id].progressBar.style.width = "100%";
             window[player_id].progressBar.style.height = "3px";
-            window[player_id].progressBar.style.backgroundColor  = "rgba(200,200,200,0.5)";
+            //window[player_id].progressBar.style.backgroundColor  = "rgba(200,200,200,0.5)";
 
 
 
@@ -325,7 +325,7 @@ function rvideolog(msg){
             window[player_id].progressBarProgress.style.width = "0px";
             window[player_id].progressBarProgress.style.height = "3px";
 
-            window[player_id].progressBarProgress.style.backgroundColor  = "rgba(255,0,0,0.8)";
+            //window[player_id].progressBarProgress.style.backgroundColor  = "rgba(255,0,0,0.8)";
 
 
 
@@ -542,6 +542,25 @@ function rvideolog(msg){
 
             }
 
+                window[player_id].controlBar.btn.timer = document.createElement("div");
+                window[player_id].controlBar.btn.timer.className = "rright timerduration";
+
+                window[player_id].controlBar.btn.timer.leftSpan = document.createElement("span");
+                window[player_id].controlBar.btn.timer.rightSpan = document.createElement("span");
+                
+
+
+
+                window[player_id].controlBar.btn.timer.devider = document.createElement("span");
+                window[player_id].controlBar.btn.timer.devider.innerHTML = "/";
+
+                window[player_id].controlBar.btn.timer.appendChild(window[player_id].controlBar.btn.timer.leftSpan);
+                window[player_id].controlBar.btn.timer.appendChild(window[player_id].controlBar.btn.timer.devider);
+                window[player_id].controlBar.btn.timer.appendChild(window[player_id].controlBar.btn.timer.rightSpan);
+
+                window[player_id].controlBar.rightPanel.appendChild(window[player_id].controlBar.btn.timer);
+
+
             // add progress progressBar
             window[player_id].controlBar.appendChild( window[player_id].progressBar );
 
@@ -670,7 +689,8 @@ function rvideolog(msg){
             // default hide the close full screen button                       
             window[player_id].controlBar.btn.closeFullscreenButton.style.display = "none";
 
-             window[player_id].player.addEventListener("timeupdate", updateProgressBarProgress );           
+            window[player_id].player.addEventListener("timeupdate", updateProgressBarProgress );           
+            window[player_id].player.addEventListener("loadeddata", onVideoLoad );           
         }
 
             if(window[player_id].settings.poster_play_pause_button.visible){
@@ -875,25 +895,77 @@ function rvideolog(msg){
 
         }
 
+
+        var onVideoLoad = function(){
+
+            // initial timer update
+            updateTimerTime();
+
+
+        }
+
         // update the progress bar
         var updateProgressBarProgress = function(e){
 
             var player_id = settings.id; 
             var currentTime = parseFloat(window[player_id].player.currentTime);
             var totalDuration  = parseFloat(window[player_id].player.duration);
+
+
             var progressMaxWdith = 100; // %
 
             var currentWidth = (currentTime / totalDuration) * progressMaxWdith;
             currentWidth = currentWidth + "%"
 
-            //console.log(currentWidth);
-
+            updateTimerTime();
             // updating the progress bar
             window[player_id].progressBarProgress.style.width  = currentWidth;
+        }
+
+
+        var updateTimerTime = function(){
+
+        var player_id = settings.id; 
+        var currentTime = parseFloat(window[player_id].player.currentTime);
+        var totalDuration  = parseFloat(window[player_id].player.duration);        
+        
+
+        var currentTime = getHourMinuteFromSecond(currentTime);
+        var totalTime = getHourMinuteFromSecond(totalDuration);
+
+        window[player_id].controlBar.btn.timer.leftSpan.innerHTML = currentTime;
+        window[player_id].controlBar.btn.timer.rightSpan.innerHTML = totalTime;
+
+
+        }
+
+
+        var getHourMinuteFromSecond = function(timenow){
+
+            if (parseInt(timenow)/60>=1) {
+                var h = Math.floor(timenow / 3600);
+                timenow = timenow - h * 3600;               
+                var m = Math.floor(timenow / 60);
+                var s = Math.floor(timenow % 60);
+                if(h.toString().length<2){h='0'+h;}
+                if(m.toString().length<2){m='0'+m;}
+                if(s.toString().length<2){s='0'+s;}
+                        
+            } else {
+                var m = Math.floor(timenow / 60);
+                var s = Math.floor(timenow % 60);
+                if(m.toString().length<2){m='0'+m;}
+                if(s.toString().length<2){s='0'+s;}
+                
+            }
+
+            return  m + ":" + s;
 
 
 
         }
+
+
 
         // on play button click
         var onPlayButtonClick = function(e){
